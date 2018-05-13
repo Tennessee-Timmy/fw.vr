@@ -32,7 +32,7 @@ ace_spec_updateLoop = [] spawn {
 	private _sides = missionNamespace getVariable ["mission_ace_spec_sides",ACE_SPEC_SETTING_SIDES];
 	private _sidesPlayer = player getVariable ["unit_ace_spec_sides",_sides];
 	waitUntil {
-		private _units = PLAYERLIST;
+		private _units = allPlayers;
 		private _show = [];
 		private _hide = [];
 		private _nil = {
@@ -41,6 +41,7 @@ ace_spec_updateLoop = [] spawn {
 			} else {
 				_hide pushBack _x;
 			};
+			sleep 0.01;
 			false
 		} count _units;
 		[_show,_hide] call ace_spectator_fnc_updateUnits;
