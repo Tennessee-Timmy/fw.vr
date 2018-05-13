@@ -1,0 +1,90 @@
+nig_perf_array = nearestTerrainObjects [player, ["Building"], 13000];;
+["Building", "initPost", {
+	nig_perf_array append _this;
+},true,[],true] call CBA_fnc_addClassEventHandler;
+["AllVehicles", "initPost", {
+	nig_perf_array append _this;
+},true,[],true] call CBA_fnc_addClassEventHandler;
+[
+	"nig_perf",
+	"SLIDER",
+	"Client View Distance",
+	"Nigel's Performance",
+	[150, 15000, 2500, 0],
+	nil,
+	{
+		if (!hasInterface) exitWith {};
+		params ["_value"];
+		setViewDistance (_value - 30);
+		nig_perf_distance = _value;
+		if (!hasInterface) exitWith {};
+		if (isNil 'nig_perf_loop') then {
+			nig_perf_loop = [] spawn {
+				private _objects = [];
+				private _last = 0;
+				private _dist = nig_perf_distance;
+				while {isNil 'nig_perf_stop'} do {
+
+					call {
+						if !(positionCameraToWorld [0,0,0] inarea [player,10,10,0,false]) exitWith {
+							private _nil = {
+
+								if (_obj getVariable ['nig_perf_cached',false]) then {
+									_x spawn {
+										sleep 0.1;
+										_this hideObject false;
+									};
+									_x enableSimulation true;
+									_x setVariable ['nig_perf_cached',false];
+								};
+							} count nig_perf_array;
+							sleep 1;
+						};
+						_dist = nig_perf_distance;
+						if (time - nig_perf_last < 0.1) then {sleep 0.1;};
+						if (_objects isEqualTo []) then {
+							setViewDistance (_dist - 30);
+							nig_perf_last = time;
+							_objects = nig_perf_array select {!isNil "_x" && {!isNull _x}};
+							missionNamespace setVariable ['nig_perf_array',_objects];
+						};
+
+						private _obj = _objects param [0];
+						_objects = _objects - [_obj];
+						if (_obj isKindOf "Air") then {
+							_dist = (_dist max 3000);
+						};
+						private _target = player;
+						if (!isNull curatorCamera) then {
+							_target = curatorCamera;
+						};
+						if (_obj inArea [_target,(_dist+10),(_dist+10),0,false]) then {
+							if (_obj getVariable ['nig_perf_cached',false]) then {
+								_obj enableSimulation true;
+								_obj spawn {sleep 0.1;_this hideObject false;};
+								_obj setVariable ['nig_perf_cached',false];
+							};
+						} else {
+							if !(_obj getVariable ['nig_perf_cached',false]) then {
+								_obj enableSimulation false;
+								_obj hideObject true;
+								_obj setVariable ['nig_perf_cached',true];
+							};
+						};
+					};
+				};
+				nig_perf_stop = nil;
+				private _nil = {
+					_x spawn {
+						sleep 0.1;
+						_this hideObject false;
+					};
+					_x enableSimulation true;
+					_x setVariable ['nig_perf_cached',false];
+				} count nig_perf_array;
+				terminate nig_perf_loop;
+				nig_perf_loop = nil;
+			};
+		};
+	}
+] call CBA_Settings_fnc_init;

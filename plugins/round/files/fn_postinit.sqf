@@ -1,0 +1,39 @@
+/* ----------------------------------------------------------------------------
+Function: round_fnc_postInit
+
+Description:
+	Adds eventhandelers to players
+	Sets up the respawn type round
+
+Parameters:
+	none
+Returns:
+	nothing
+Examples:
+	call round_fnc_postInit;
+	Runs in the postInit from functions.cpp
+
+Author:
+	nigel
+---------------------------------------------------------------------------- */
+#include "script_component.cpp"
+// Code begins
+
+[] spawn {
+
+	// wait for respawn plugin!
+	waitUntil {!(isNil "mission_respawn_serverReady")};
+	// Server init
+	if (isServer) then {
+		ten_start = diag_tickTime;
+		call round_fnc_setup;
+	};
+	if !(hasInterface) exitWith {};
+	call round_fnc_loop;
+};
+
+
+
+
+
+

@@ -1,0 +1,149 @@
+nig_perf_loop = [] spawn {
+ private _objectslast = 0;
+ private _objects = [];
+ nig_perf_last = 0;
+ private _p3 = nil;
+ private _p3last = [0,0,0];
+ private _dlast = 0;
+ private _fov = 0;
+ private _zoom = 0;
+ private _objectsB = [];
+ private _objectsAll = [];
+ private _lastfov = 0;
+ while {(isNil "nig_perf_stop")} do {
+  if (count _objects < 100) then {sleep 0.001};
+  call {
+
+   if (!(positionCameraToWorld [0,0,0] inarea [player,30,30,0,false]) && {isNull curatorCamera}) exitWith {
+    private _nil = {
+     if (_x getVariable ['nig_perf_cached',false]) then {
+      _x hideObject false;
+      _x setVariable ['nig_perf_cached',false];
+      _x enableSimulation true;
+     };
+    } count _objectsAll;
+    sleep 1;
+   };
+   private _dist = nig_perf_distance;
+   private _dist2 = _dist + (_dist/4);
+
+   if (_objects isEqualTo []) then {
+    if (time - nig_perf_last < 0.1) then {
+     sleep 0.001;
+    };
+    nig_perf_last = time;
+
+    _objects = nig_perf_array select {!isNil "_x" && {!isNull _x}};
+    nig_perf_array = _objects;
+
+    if ((time - _objectslast) > 120) then {
+     _objectslast = time;
+     _objectsB = allMissionObjects "building";
+     nig_perf_arrayB = _objectsB;
+    } else {
+     _objectsB = nig_perf_arrayB;
+    };
+    _objectsAll = _objects + _objectsB;
+
+    _objects = _objectsAll select {
+     (
+       (!isNil {_x}) && {
+        (!isNull _x) &&
+        {
+        (!(_x getVariable ['nig_perf_cached',false]) && {!(_x inArea [player,(_dist/3),(_dist/3),0,false])}) ||
+        {(_x getVariable ['nig_perf_cached',false]) && {_x inArea [player,_dist2,_dist2,0,false]}}
+       }
+      }
+     )
+    };
+
+   };
+
+   if (_objects isEqualTo []) exitWith {sleep 0.01;};
+   _dist = nig_perf_distance;
+   _dist2 = _dist - _dist/5;
+   private _dist3 = _dist;
+
+   private _obj = _objects param [0];
+   _objects = _objects - [_obj];
+   if (_obj isKindOf "Air") exitWith {
+    _dist2 = (_dist + 750)max 3000;
+    if (_obj inArea [player,(_dist2),(_dist2),0,false]) then {
+     if (_obj getVariable ['nig_perf_cached',false]) then {
+      _obj enableSimulation true;
+      _obj hideObject false;
+      _obj setVariable ['nig_perf_cached',false];
+     };
+    } else {
+     if !(_obj getVariable ['nig_perf_cached',false]) then {
+      _obj hideObject true;
+      _obj setVariable ['nig_perf_cached',true];
+     };
+    };
+   };
+
+   private _target = player;
+   if (!isNull curatorCamera) then {
+    _target = curatorCamera;
+   };
+
+   _pos2 = getPos player;
+   private _pos1 = screenToWorld [0.5,0.5];
+   private _dir = ((((_pos1 select 0) - (_pos2 select 0)) atan2 ((_pos1 select 1) - (_pos2 select 1))) + 360) % 360;
+
+   if (time - _lastfov > 0.001) then {
+    _lastfov = time;
+    _fov = call CBA_fnc_getFov;
+    _zoom = _fov param [0];
+    _fov = _fov param [1];
+    _zoom = (_zoom * 55) - log _zoom;
+    _fov = log(_fov * 100);
+    _fov = (_dist2*_fov)/1.5;
+   };
+
+   _p3 = player getPos [(_fov),(_dir -_zoom)];
+   private _pol = [
+    player getPos [(-100),_dir],
+    player getPos [(_fov),(_dir+_zoom)],
+    _p3
+   ];
+
+   nig_perf_pol = _pol;
+
+   if ((getPos _obj) inPolygon _pol) then {
+    if (_obj getVariable ['nig_perf_cached',false]) then {
+     _obj enableSimulation true;
+     _obj hideObject false;
+     _obj setVariable ['nig_perf_cached',false];
+    };
+   } else {
+    if !(_obj getVariable ['nig_perf_cached',false]) then {
+     _obj hideObject true;
+     _obj setVariable ['nig_perf_cached',true];
+    };
+   };
+
+   if (!isNil "_p3" && {_dist == _dist3 && {(_p3 distanceSqr _p3last) > 2500}}) then {
+    private _d = (_p3 distance player);
+    if (_d - _dlast > 100 || {_dlast - _d > 100}) then {
+     _p3last = _p3;
+     _dlast = _d;
+     _d = _d + (_d*1.3) - log(_d*5)*400;
+     systemChat str _d;
+     setViewDistance _d;
+     setObjectViewDistance _d;
+    };
+   };
+  };
+ };
+ nig_perf_stop = nil;
+ private _nil = {
+  if (_x getVariable ['nig_perf_cached',false]) then {
+   _x hideObject false;
+   _x setVariable ['nig_perf_cached',false];
+  };
+  _x enableSimulation true;
+ } count _objectsAll;
+ terminate nig_perf_loop;
+ nig_perf_loop = nil;
+};

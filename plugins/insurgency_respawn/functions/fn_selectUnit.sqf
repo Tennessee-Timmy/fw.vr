@@ -1,0 +1,20 @@
+params ["_target"];
+private ["_marker"];
+_map = findDisplay 42069 displayCtrl 470;
+_map ctrlMapAnimAdd [0, 0.01, getpos _target];
+_marker = missionNamespace getVariable ["BRM_insurgency_respawn_selectedMarker",nil];
+if (isNil "_marker") then {
+	_marker = createMarkerLocal ["BRM_insurgency_respawnMarkSelected",[0,0,0]];
+	_marker setMarkerTypeLocal "mil_start";
+	_marker setMarkerColorLocal "ColorBlue";
+	_marker setMarkerTextLocal "";
+	_marker setMarkerSizeLocal [1.5, 1.5];
+};
+_marker setMarkerPosLocal getPos _target;
+_marker setMarkerDirLocal getDir _target;
+missionNamespace setVariable ["BRM_insurgency_respawn_selectedMarker",_marker];
+missionNamespace setVariable ["BRM_insurgency_respawn_selectedUnit",_target];
+_cam = brm_insurgency_respawn_camera;
+_cam attachTo [(vehicle _target),[0,-5.5,0],"neck"];
+(findDisplay 42069 displayCtrl 421) ctrlSetText (toUpper (name _target));
+ctrlMapAnimCommit _map;

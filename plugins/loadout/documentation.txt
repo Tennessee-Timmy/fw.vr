@@ -1,0 +1,95 @@
+/*
+How to use loadouts
+*/
+
+First off, set up your custom loadouts in the loadouts folder,
+name them properly and define them in settings.
+
+You can just rename and edit the default ones, but be sure to
+set up your settings.cpp accordingly.
+
+LOADOUT_SETTING_FACTIONS //should contain all the loadouts that
+exist in the loadout folder
+
+LOADOUT_SETTING_FACTION_WEST //etc. need to be defined
+as the faction which the side will use.
+
+
+//--- UNIT LOADOUTS ---
+//LOAD LOADOUT:
+	[player,FACTION,ROLES] call loadout_fnc_unit;
+
+This will remove everything and readd the whole loadout
+examples:
+// Give nato rifleman to player
+[player,"nato","rifleman"] call loadout_fnc_unit;
+// Give auto/set loadout
+[player] call loadout_fnc_unit;
+
+//CHANGE ROLE:
+	unit_loadout_role = "role"
+example:
+unit1 setVariable ["unit_loadout_role","engineer",true];
+special roles:
+	"" - enable role auto-detection based on role description(alpha 1 - rifleman) or unit display name(rifleman)
+
+//CHANGE FACTION
+	unit_loadout_faction = "faction" or SIDE
+example:
+unit1 setVariable ["unit_loadout_faction","nato",true];
+special roles:
+	"disabled" - disables loadout for the unit
+	"empty" - makes unit naked
+	"" - enable auto detection based on side
+
+//DISABLE AUTO:
+	unit_loadout_disabled = true
+example:
+unit1 setVariable ["unit_loadout_disabled",true,true];
+This will disable the auto-loadout for the unit (on spawn)
+
+
+
+
+//--- CARGO LOADOUTS ---
+//LOAD LOADOUT:
+	[car,"nato",["ammo","medical"]] call loadout_fnc_cargo;
+
+This will remove everything and readd all cargo of vehicle or create
+examples:
+// Give nato ammo and medical to vehicle
+[car,"nato",["ammo","medical"]] call loadout_fnc_cargo;
+// Give auto/set cargo
+[car] call loadout_fnc_cargo;
+
+//CHANGE CARGO:
+	unit_loadout_cargoType = [["rifle",5],"ammo","medical"]
+example:
+// 5 rifles, ammo and medical
+unit_loadout_cargoType = [["rifle",5],"ammo","medical"]
+
+special roles:
+	"" - enable role auto-detection based on what is in the cargo
+
+//CHANGE FACTION
+	unit_loadout_faction = "faction" or SIDE
+example:
+unit1 setVariable ["unit_loadout_faction","nato",true];
+special roles:
+	"disabled" - disables loadout for the unit
+	"empty" - makes unit naked
+	"" - auto detection based on side of the vehicle/cargo
+
+//DISABLE AUTO:
+	unit_loadout_disabled = true
+example:
+unit1 setVariable ["unit_loadout_disabled",true,true];
+
+This will disable the auto-loadout for the vehicle (on spawn)
+
+
+//--- AUTO LOADOUTS ---
+Settings can be edited in settings file and/or during mission:
+mission_loadout_auto_enabled = true; // set as false to disable auto loadouts mid-mission
+
+Set the faction of the side to "disabled" to disable loadouts for a side easily.

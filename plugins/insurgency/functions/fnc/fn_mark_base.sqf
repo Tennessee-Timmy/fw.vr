@@ -1,0 +1,10 @@
+private ["_distance","_markerCount","_marker","_mGroup"];
+params ["_mGroup","_target","_distanceMult","_distanceMin","_distancemax","_distanceDef"];
+_markersStr = format ["BRM_insurgency_markers_%1",_mGroup];
+_markers = missionNamespace getVariable [_markersStr,[]];
+_markerCount = count _markers;
+_distance = (ceil(random _distancemax)+_distanceDef)*100 - (_markerCount*_distanceMult);
+if (_distance < _distanceMin) then {_distance = _distanceMin;};
+_marker = [_target,_distance,_mGroup,true] call BRM_insurgency_fnc_taskMarker;
+_markers pushBackUnique _marker;
+missionNamespace setVariable [_markersStr,_markers];

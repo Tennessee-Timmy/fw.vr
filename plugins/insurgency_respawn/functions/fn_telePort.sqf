@@ -1,0 +1,10 @@
+params ["_target"];
+cutText ["","BLACK OUT",0.5];
+sleep 1;
+findDisplay 42069 closeDisplay 0;
+_dir = getDir _target;
+_pos = _target getpos [-5,_dir];
+_safePos = [_pos,0, 15, 0.2, 0, 0, 0, [], [_pos]] call BIS_fnc_findSafePos;
+player setpos _pos;
+player setDir _dir;
+cutText ["","BLACK IN",1];
