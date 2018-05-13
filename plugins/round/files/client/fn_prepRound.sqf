@@ -113,6 +113,7 @@ if (_i > 10) exitWith {
 	_unit setDamage 1;
 };
 
+_unit setVelocity [0,0,0];
 _unit allowDamage true;
 
 
@@ -136,7 +137,7 @@ private _onRoundPrepCodeLoc = {};
 if (_locCodeFile call mission_fnc_checkFile) then {
 	// load the file
 	call compile preprocessFileLineNumbers _locCodeFile;
-	_unit call _onRoundPrepCodeLoc;
+	[_unit,_locnr] call _onRoundPrepCodeLoc;
 };
 
 

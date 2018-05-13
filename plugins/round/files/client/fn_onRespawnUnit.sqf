@@ -71,6 +71,8 @@ call {
 	systemChat 'No position found for respawn';
 };
 
+_unit setVelocity [0,0,0];
+
 
 // AO code
 private _aoName = missionNamespace getVariable ['mission_round_aoName',''];
