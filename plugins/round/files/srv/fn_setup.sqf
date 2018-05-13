@@ -25,4 +25,4 @@ missionNamespace setVariable ["mission_type",{call round_fnc_onRespawn},true];
 [[""],{call round_fnc_onRespawnUnit},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
 
 // Start the server timer
-[] spawn round_fnc_loopGameSrv;
+round_main_loop = [] spawn round_fnc_loopGameSrv;

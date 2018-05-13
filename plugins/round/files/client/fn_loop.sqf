@@ -48,7 +48,6 @@ if !(hasInterface) exitWith {};
 	private _lastTimeStr = '';
 	private _roundTimeStr = '--:--';
 
-	private _lastScores = [];
 
 	// loop until loop gets disabled
 	waitUntil {
@@ -270,8 +269,6 @@ if !(hasInterface) exitWith {};
 
 			// make sure scores exist
 			private _scores =+ (missionNamespace getVariable ['mission_round_sides_active',[]]);
-			if (_scores isEqualTo _lastScores) exitWith {};
-			_lastScores =+ _scores;
 
 			// get player side
 			private _side = player getVariable ['unit_round_side',''];
@@ -310,7 +307,7 @@ if !(hasInterface) exitWith {};
 					_side = _scores deleteAt 0;
 
 					// make sure side is not empty
-					if (_side isEqualTo []) exitWith {};
+					if (_side isEqualTo objNull) exitWith {};
 
 					// get side params
 					private _sideName = _side getVariable ['round_sideName',''];
@@ -323,27 +320,30 @@ if !(hasInterface) exitWith {};
 
 					// if name is same as player side name, save it as player side
 					if ((toLower _sideName) isEqualTo _sidePlayer) then {
-						_playerSide = [_sideName,_sideWins];
+						_playerSide = [_sideName,_sideWins,_side];
 					};
 
 					// loop through the top 3 sides
 					{
-						_x params [['_bestSide',''],['_bestWins',0]];
+						_x params [['_bestSideName',''],['_bestWins',0],['_bestSide',objNull]];
 
 						// if the best side is empty or current side has more wins, replace it with current side
-						if (_bestSide isEqualTo '' || _sideWins > _bestWins) exitWith {
+						if (_bestSideName isEqualTo '' || _sideWins > _bestWins) exitWith {
 
+							// if we are replacing a side, side name won't be empty
 							// add the score we are replacing back to the check array (so if it was 1st it can be rechecked for 2nd/3rd)
-							if !(_bestSide isEqualTo '') then {
-								_scores pushBackUnique [_bestSide,[],[nil,_bestWins]];
+							if !(_bestSideName isEqualTo '') then {
+								_scores pushBackUnique _bestSide;
 							};
 
+
 							// using set to edit original array
-							_topSides set [_forEachIndex,[_sideName,_sideWins]];
+							_topSides set [_forEachIndex,[_sideName,_sideWins,_side]];
 						};
 					} forEach _topSides;
 				};
 			};
+
 
 
 			// if playerside is not in the top sides, add player side to the list of sides

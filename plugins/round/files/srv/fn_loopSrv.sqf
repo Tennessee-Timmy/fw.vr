@@ -126,10 +126,10 @@ while {isNil "disable_round_loopSrv"} do {
 	//--- Round start
 	// update locations if it's time to switch them
 	// if it's not time to switch team update them *(for setvariable for clients to know what spawn location to use (in case of jip etc.))
-	if ((_playedRounds mod _locSwitch) isEqualTo 0) then {
-		call round_fnc_updateLoc;
-	} else {
+	if (_playedRounds > 0 && (_playedRounds mod _locSwitch) isEqualTo 0) then {
 		[false] call round_fnc_updateLoc;
+	} else {
+		[true] call round_fnc_updateLoc;
 	};
 
 
@@ -160,8 +160,6 @@ while {isNil "disable_round_loopSrv"} do {
 		};
 	};
 
-	// load ao
-	[nil,nil,nil,true] spawn round_fnc_loadAO;
 
 	_activeSides = call round_fnc_update;
 
@@ -173,6 +171,11 @@ while {isNil "disable_round_loopSrv"} do {
 
 	//--- Prepare the round
 	call round_fnc_prepRoundSrv;
+
+	sleep 1;
+
+	// load ao
+	[nil,nil,nil,true] spawn round_fnc_loadAO;
 
 	// wait until preperation ends
 	for '_i' from _prepTime to 0 step -1 do {
@@ -284,6 +287,12 @@ while {isNil "disable_round_loopSrv"} do {
 		if (!isNil '_addTime') then {
 			_i = _i + _addTime;
 			missionNamespace setVariable ['mission_round_timeAdd',nil];
+		};
+
+		private _replaceTime = missionNamespace getVariable 'mission_round_timeReplace';
+		if (!isNil '_replaceTime') then {
+			_i = _replaceTime;
+			missionNamespace setVariable ['mission_round_timeReplace',nil];
 		};
 	};
 
