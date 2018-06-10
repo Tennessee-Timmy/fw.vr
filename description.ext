@@ -130,3 +130,8 @@ class Extended_Init_EventHandlers {
 		#include "plugins\plugins.cpp"
 	#undef MISSION_PLUGIN_XEHINIT
 };
+class Extended_DisplayLoad_EventHandlers {
+	#define MISSION_PLUGIN_XEHDISPLAYLOAD
+		#include "plugins\plugins.cpp"
+	#undef MISSION_PLUGIN_XEHDISPLAYLOAD
+};

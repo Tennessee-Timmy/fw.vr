@@ -39,7 +39,9 @@ if (isServer) then {
 	if (respawn_location isEqualTo 4) then {};
 
 	// add group fix code
-	[[""],{_group = [player] call respawn_fnc_findGroup},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
+	if !('lobby' in mission_plugins) then {
+		[[""],{_group = [player] call respawn_fnc_findGroup},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
+	};
 
 	missionNamespace setVariable ["mission_respawn_serverReady",true,true];
 
@@ -55,7 +57,9 @@ if (hasInterface) then {
 	[] spawn {
 
 		// get correct group for unit
-		private _group = [player] call respawn_fnc_findGroup;
+		if !('lobby' in mission_plugins) then {
+			private _group = [player] call respawn_fnc_findGroup;
+		};
 
 		// Add admin menus
 		if ("menus" in mission_plugins && {call menus_fnc_isAdmin}) then {

@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={7538.2397,26.244411,7471.3882};
-		dir[]={-0.87758362,-0.47782317,0.03963099};
-		up[]={-0.47734946,0.87844843,0.021555725};
-		aside[]={0.045113619,-7.5719799e-007,0.99900109};
+		pos[]={7520.5859,65.298431,7339.2915};
+		dir[]={0.034094322,-0.47305235,0.88039821};
+		up[]={0.018305341,0.88102829,0.47271204};
+		aside[]={0.99927288,-7.4015043e-007,-0.038697753};
 	};
 };
 binarizationWanted=0;
@@ -29,10 +29,10 @@ addons[]=
 	"A3_Modules_F",
 	"A3_Structures_F_Exp_Cultural_Fortress_01",
 	"A3_Characters_F",
-	"Desert",
 	"ace_explosives",
 	"A3_Characters_F_Mark",
 	"A3_Armor_F_Beta_APC_Wheeled_01",
+	"acre_sys_intercom",
 	"ace_realisticnames",
 	"A3_Armor_F_Beta_APC_Tracked_01",
 	"A3_Armor_F_EPC_MBT_01",
@@ -64,7 +64,6 @@ addons[]=
 	"A3_Soft_F_MRAP_02",
 	"A3_Armor_F_Beta_APC_Wheeled_02",
 	"A3_Armor_F_Beta_APC_Tracked_02",
-	"ace_vehicles",
 	"A3_Armor_F_Gamma_MBT_02",
 	"ace_cookoff",
 	"A3_Air_F_Beta_Heli_Attack_02",
@@ -106,29 +105,31 @@ class AddonsMetaData
 		};
 		class Item4
 		{
-			className="Desert";
-			name="Desert";
-		};
-		class Item5
-		{
 			className="ace_explosives";
 			name="ACE3 - Explosives";
 			author="ACE-Team";
 			url="http://ace3mod.com/";
 		};
-		class Item6
+		class Item5
 		{
 			className="A3_Characters_F_Mark";
 			name="Arma 3 Marksmen - Characters and Clothing";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item7
+		class Item6
 		{
 			className="A3_Armor_F_Beta";
 			name="Arma 3 Beta - Armored Land Vehicles";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
+		};
+		class Item7
+		{
+			className="acre_sys_intercom";
+			name="ACRE2 - Vehicle Intercom";
+			author="ACRE2Team";
+			url="https://github.com/IDI-Systems/acre2";
 		};
 		class Item8
 		{
@@ -279,7 +280,7 @@ class ScenarioData
 };
 class CustomAttributes
 {
-	class Category1
+	class Category0
 	{
 		name="Multiplayer";
 		class Attribute0
@@ -320,7 +321,7 @@ class CustomAttributes
 		};
 		nAttributes=1;
 	};
-	class Category2
+	class Category1
 	{
 		name="Scenario";
 		class Attribute0
