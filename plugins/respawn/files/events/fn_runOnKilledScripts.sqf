@@ -57,5 +57,5 @@ _nul = {
 
 // Keep keepable scripts
 // Return array of scripts which have keep, true or undefined.
-_onKilledScripts = _onKilledScripts select {_x param [1, true]};
-_oldUnit setVariable ["unit_onKilled_scripts",_onKilledScripts];
+_unit_onKilledScripts = _unit_onKilledScripts select {_x param [1, true]};
+_oldUnit setVariable ["unit_onKilled_scripts",_unit_onKilledScripts];
