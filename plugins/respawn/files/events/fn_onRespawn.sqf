@@ -47,7 +47,7 @@ if !(isNil "mission_respawn_type_loaded") then {
 // Code/function must be {code}
 
 // Defaults to instant respawn type
-_spawnScript = missionNamespace getVariable ["mission_respawn_type",{call respawn_fnc_instant_onRespawn}];
+_spawnScript = missionNamespace getVariable ["mission_respawn_type",{}];
 mission_respawn_type_loaded = _newUnit call _spawnScript;
 
 // Run all respawn scripts

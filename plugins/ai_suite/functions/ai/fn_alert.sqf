@@ -33,6 +33,7 @@ _array set [11,[true,time]];
 		if (_passedSuppressing > _suppressingPause && random 100 > 75) then {
 			private _suppressTime = (3 + ceil random 10);
 			_x suppressFor _suppressTime;
+			_x doSuppressiveFire _enemyspotted;
 			_x setVariable ["aiMaster_suppressingEndTime",(time + _suppressTime)];
 		};
 	};
