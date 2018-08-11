@@ -347,7 +347,7 @@ if !(isClass (configFile >> "CfgPatches" >> "achilles_modules_f_achilles")) exit
 		private _button1 = ["Reset loadout",[0.5,3,5,1],"
 			_target = missionNamespace getVariable ['loadout_zeus_target',nil];
 			if (isNil '_target') exitWith {systemChat 'Failed resetting loadout, selected player fail'};
-			[_target] call loadout_fnc_unit;
+			[_target] remoteExec ['loadout_fnc_unit',_target];
 			systemChat format ['%1 loadout has been reset',(name _target)];
 			",
 			6004,

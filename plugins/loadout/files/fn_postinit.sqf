@@ -20,8 +20,9 @@ Author:
 
 
 if (isServer) then {
-	[[""],{[(_this select 0),"empty"] call loadout_fnc_unit},"onRespawn",true] call respawn_fnc_scriptAdd;
-	[[""],{call loadout_fnc_onRespawnUnit},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
+	// [[""],{[(_this select 0),"empty"] call loadout_fnc_unit},"onRespawn",true] call respawn_fnc_scriptAdd;
+	// [[""],{call loadout_fnc_onRespawnUnit},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
+	[[""],{call loadout_fnc_onRespawnUnit},"onRespawn",true] call respawn_fnc_scriptAdd;	// fix for revive respawn system
 };
 
 if (hasInterface) then {

@@ -12,7 +12,7 @@ Examples:
 	call cookoff_fnc_cookoffVehicle;
 
 Author:
-	nigel
+	nigel,cory
 ---------------------------------------------------------------------------- */
 #include "script_component.cpp"
 // code begins

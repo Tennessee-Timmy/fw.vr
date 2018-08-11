@@ -94,10 +94,11 @@ if !(_enabled) exitWith {};
 // repair
 ["ace_repair_engineerSetting_repair", 0, true, _source, false] call CBA_settings_fnc_set;
 ["ace_repair_engineerSetting_wheel", 0, true, _source, false] call CBA_settings_fnc_set;
-["ace_repair_repairDamageThreshold", 0.6, true, _source, false] call CBA_settings_fnc_set;
+["ace_repair_repairDamageThreshold", 0, true, _source, false] call CBA_settings_fnc_set;
 ["ace_repair_repairDamageThreshold_engineer", 0.4, true, _source, false] call CBA_settings_fnc_set;
 ["ace_repair_consumeItem_toolKit", 0, true, _source, false] call CBA_settings_fnc_set;
 ["ace_repair_fullRepairLocation", 0, true, _source, false] call CBA_settings_fnc_set;
+["ace_repair_engineerSetting_fullRepair", 0, true, _source, false] call CBA_settings_fnc_set;
 ["ace_repair_addSpareParts", true, true, _source, false] call CBA_settings_fnc_set;
 ["ace_repair_wheelRepairRequiredItems", 0, true, _source, false] call CBA_settings_fnc_set;
 ["ace_repair_autoShutOffEngineWhenStartingRepair", true, true, _source, false] call CBA_settings_fnc_set;

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
-Function: ace_spec_fnc_menu
+Function: ace3_fnc_menu
 
 Description:
 	Creates the dialog in the mission menu (menus plugin)
@@ -9,7 +9,7 @@ Parameters:
 Returns:
 	nothing
 Examples:
-	call ace_spec_fnc_menu;
+	call ace3_fnc_menu;
 
 Author:
 	nigel
@@ -29,10 +29,12 @@ private _GUI_GRID_X = (0);
 private _GUI_GRID_Y = (0);
 
 // Create a control already defined in dialogs.hpp
-private _title = ["ADMIN SPECTATOR MENU",[0,0,14,1.2],true]call menus_fnc_addTitle;
+private _title = ["ADMIN ACE MENU",[0,0,14,1.2],true]call menus_fnc_addTitle;
 
-private _button1 = ["Close spectator",[0.5,1.5,6,1],"call spec_fnc_onRespawnUnit;[] call acre_sys_core_fnc_spectatorOff;",-1]call menus_fnc_addButton;
-_button1 ctrlSetTooltip "Close spectator interface, so you can use zeus instead";
+private _button1 = ["Heal myself",[0.5,1.5,6,1],"[player,player] call ACE_medical_fnc_treatmentAdvanced_fullHealLocal;",-1]call menus_fnc_addButton;
+_button1 ctrlSetTooltip "You little cheat";
 
-private _button2 = ["Open Spectator",[0.5,3,6,1],"call spec_fnc_onRespawn;[] call acre_sys_core_fnc_spectatorOn;",-1]call menus_fnc_addButton;
-_button2 ctrlSetTooltip "Open it again, when you are done zeusing";
+private _button2 = ["Heal everyone",[0.5,3,6,1],"
+private _nil = {[player,_x] call ACE_medical_fnc_treatmentAdvanced_fullHeal;false} count (allPlayers - entities 'HeadlessClient_F');
+",-1]call menus_fnc_addButton;
+_button2 ctrlSetTooltip "heal everyone";

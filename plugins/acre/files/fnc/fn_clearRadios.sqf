@@ -16,7 +16,7 @@ Author:
 #include "script_component.cpp"
 // Code begins
 
-_radios = [
+private _radios = [
 	'ACRE_PRC343',
 	'ACRE_PRC148',
 	'ACRE_PRC152',
