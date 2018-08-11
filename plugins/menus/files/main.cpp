@@ -9,14 +9,11 @@
 		conflicts[] = {};
 	};
 #endif
-/*
-#ifdef MISSION_PARAMS
-	#include "Parameters.cpp"
-#endif
-*/
+
 #ifdef MISSION_PLUGIN_FUNCTIONS
 	#include "functions.cpp"
 #endif
+
 #ifdef MISSION_PLUGIN_DIALOGS
 	#include "dialogs\defines.hpp"
 	#include "dialogs\controls.hpp"
