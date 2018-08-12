@@ -31,8 +31,8 @@ private _GUI_GRID_Y = (0);
 // Create a control already defined in dialogs.hpp
 private _title = ["ADMIN SPECTATOR MENU",[0,0,14,1.2],true]call menus_fnc_addTitle;
 
-private _button1 = ["Close spectator",[0.5,1.5,6,1],"call spec_fnc_onRespawnUnit;",-1]call menus_fnc_addButton;
+private _button1 = ["Close spectator",[0.5,1.5,6,1],"call spec_fnc_onRespawnUnit;[] call acre_sys_core_fnc_spectatorOff;",-1]call menus_fnc_addButton;
 _button1 ctrlSetTooltip "Close spectator interface, so you can use zeus instead";
 
-private _button2 = ["Open Spectator",[0.5,3,6,1],"call spec_fnc_onRespawn;",-1]call menus_fnc_addButton;
+private _button2 = ["Open Spectator",[0.5,3,6,1],"call spec_fnc_onRespawn;[] call acre_sys_core_fnc_spectatorOn;",-1]call menus_fnc_addButton;
 _button2 ctrlSetTooltip "Open it again, when you are done zeusing";

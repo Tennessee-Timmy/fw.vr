@@ -23,7 +23,7 @@ Author:
 
 params ["_target"];
 
-if (isNil "_target" || {isNull _target} || {!(_target isKindOf "CAManBase")}) exitWith {};
+if (isNil "_target" || {isNull _target} || {!(_target isKindOf "CAManBase")}) exitWith {''};
 
 _role = "";
 private _roleDesc = toLower (roleDescription _target);

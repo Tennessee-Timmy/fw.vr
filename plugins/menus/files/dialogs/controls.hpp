@@ -6,7 +6,31 @@ class menus_template_display
   enableSimulation = 1; // 1 (true) to allow world simulation to be running in the background, 0 to freeze it
   enableDisplay = 1; // 1 (true) to allow scene rendering in the background
 };
-
+class menus_template_progress {
+  idc = 1012;
+  type = 8;
+  style = 0;
+  colorFrame[] = {1,0.5,0.0,1};
+  colorBar[] = {1,0.6,0.2,1};
+  texture = "#(argb,8,8,3)color(1,1,1,1)";
+  x = 0 + (0 * GUI_GRID_W);
+  y = 0 + (5.5 * GUI_GRID_H);
+  w = 5  * GUI_GRID_W;
+  h = 1  * GUI_GRID_H;
+};
+class menus_template_slider {
+  idc = 1011;
+  type = CT_SLIDER;
+  style = SL_HORZ;
+  x = 0 + (0 * GUI_GRID_W);
+  y = 0 + (5.5 * GUI_GRID_H);
+  w = 5  * GUI_GRID_W;
+  h = 1  * GUI_GRID_H;
+  color[] = {1,0.6,0.2,1};
+  coloractive[] = {0.85,0.4,0,1};
+  // This is an ctrlEventHandler to show you some response if you move the sliderpointer.
+  onSliderPosChanged = "";
+};
 class menus_template_listBox
 {
   idc = 1011; // Control identification (without it, the control won't be displayed)

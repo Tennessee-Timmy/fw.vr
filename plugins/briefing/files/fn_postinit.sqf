@@ -39,8 +39,7 @@ briefing_openMap_handle = addMissionEventHandler ["Map",{
 }];
 
 // briefing
-
-_briefing = missionNamespace getVariable ["unit_briefing_faction",(side player)];
+_briefing = player getVariable ["unit_briefing_faction",(side player)];
 
 if ((toLower (str _briefing)) in ["west","guer","east","civ"]) then {
 	private _briefingFile = format ["plugins\briefing\briefings\%1.sqf",_briefing];

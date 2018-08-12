@@ -19,7 +19,7 @@ Author:
 // Code begins
 
 if (isServer) then {
-	[[""],{call spec_fnc_onRespawn},"onRespawn",true] call respawn_fnc_scriptAdd;
+	[[""],{call spec_fnc_onRespawn},"onKilled",true] call respawn_fnc_scriptAdd;
 	[[""],{call spec_fnc_onRespawnUnit},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
 };
 

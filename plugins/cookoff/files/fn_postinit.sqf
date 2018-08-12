@@ -44,6 +44,7 @@ Author:
 [] spawn {
     sleep 1;
     ace_cookoff_enableAmmoCookoff = false;
+    ace_cookoff_enableAmmoBox = false;
 };
 if (!isServer) exitWith {};
 ["ace_cookoff_enableAmmoCookoff", !(missionNamespace getVariable ['mission_cookoff_enabled',COOKOFF_PARAM_ENABLED]), true, "mission", false] call CBA_settings_fnc_set;

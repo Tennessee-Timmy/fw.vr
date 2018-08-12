@@ -31,6 +31,7 @@ class PLUGIN {
 		class addButton {};
 		class addDisplay {};
 		class addGroup {};
+		class addSlider {};
 		class addTextBox {};
 		class addTitle {};
 		class droplist {};

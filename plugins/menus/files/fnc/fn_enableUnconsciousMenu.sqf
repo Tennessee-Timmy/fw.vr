@@ -29,14 +29,14 @@ menus_unconscious_enabled = true;
 		// Wait until ace disable input exists
 		waitUntil {
 			!((uiNamespace getvariable ["ace_common_dlgDisableMouse",displayNull]) isEqualTo displayNull) ||
-			!((findDisplay 60000) isEqualTo displayNull)
+			!((findDisplay 60492) isEqualTo displayNull)
 		};
 
 		disableSerialization;
 
 		_found = 1;
 		// Get spectator display
-		private _display = (findDisplay 60000);
+		private _display = (findDisplay 60492);
 
 		// if spectator display does not exist, get unconscious display instead
 		if (isNull _display) then {
@@ -67,7 +67,7 @@ menus_unconscious_enabled = true;
 		// Wait until disable input does not exist
 		waitUntil {
 			(((uiNamespace getvariable ["ace_common_dlgDisableMouse",displayNull]) isEqualTo displayNull) && (_found isEqualTo 2)) ||
-			((findDisplay 60000) isEqualTo displayNull && (_found isEqualTo 1))
+			((findDisplay 60492) isEqualTo displayNull && (_found isEqualTo 1))
 		};
 		sleep 1;
 	};
