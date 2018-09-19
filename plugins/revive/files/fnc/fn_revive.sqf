@@ -5,25 +5,29 @@ Description:
 	Attempt to revive a player
 
 Parameters:
-0:	_unit	- unit to revive
+0:	_unit		- unit to revive
+1:	_overRide	- allow reviving with enemies nearby
 
 Returns:
 	nothing
 Examples:
-	_unit call revive_fnc_revive;
+	[_unit] call revive_fnc_revive;
 Author:
 	nigel
 ---------------------------------------------------------------------------- */
 #include "script_component.cpp"
 // Code begins
 
-params [["_unit",objNull]];
+params [["_unit",objNull],['_overRide',false,[false]]];
 
 if (isNull _unit) exitWith {};
 
 // make sure unit is still in-game
 private _newUnit = _unit getVariable ['unit_revive_newUnit',objNull];
-if (isNull _newUnit) exitWith {systemChat 'Cannot revive, target unavailable(respawned or disconnected)'};
+if (isNull _newUnit) exitWith {
+	systemChat 'Cannot revive, target unavailable(respawned or disconnected)';
+	_unit setVariable ['unit_revive_canBeRevived',false,true];
+};
 
 // check the last time the player was shot at
 private _lastShotAt = missionNamespace getVariable ['mission_supp_lastShotAt',(time-30)];
@@ -51,7 +55,7 @@ _newUnit setVariable ['unit_revive_isRevived',true,true];
 	_this call respawn_fnc_respawn;
 };
 
-'You have been revived, stay alive for 10 minutes to be revived again.' remoteExec ['systemChat',_newUnit];
+'You have been revived, stay alive for 5 minutes to be revived again.' remoteExec ['systemChat',_newUnit];
 
 // save the time that has to be passed for revive to be enabled again
-_newUnit setVariable ['unit_revive_nextRevive',(CBA_Missiontime + 300),true];
+_newUnit setVariable ['unit_revive_nextRevive',(CBA_Missiontime + 120),true];

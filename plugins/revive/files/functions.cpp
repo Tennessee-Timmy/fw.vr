@@ -11,6 +11,7 @@ class PLUGIN {
 		class location {};
 		class markerLoop {};
 		class onBodyBag {};
+		class onKilled {};
 		class onRespawn {};
 		class onRespawnUnit {};
 		class revive {};

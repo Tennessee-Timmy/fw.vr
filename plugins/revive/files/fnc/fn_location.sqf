@@ -34,6 +34,9 @@ if (isNull _oldUnit || !_isRevived) exitWith {
 [player,true,0.5,true] call ace_medical_fnc_setUnconscious;
 
 private _loadOut = getUnitLoadout _oldUnit;
+if (_loadOut isEqualTo []) then {
+	_loadOut = _oldUnit getVariable ['unit_revive_oldLoadout',[]];
+};
 player setUnitLoadout _loadOut;
 
 // wait for player to be unconscious and then respawn him
@@ -51,6 +54,7 @@ player setUnitLoadout _loadOut;
 
 	player setVariable ['unit_revive_isRevived',false,true];
 
+	_oldUnit setVariable ['unit_revive_canBeRevived',false,true];
 
 	//deleteVehicle _oldUnit;
 	[_oldUnit,true] remoteExec ['hideObjectGlobal',2];

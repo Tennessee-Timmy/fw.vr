@@ -32,13 +32,14 @@ _handle = [] spawn {
 		private _markers = missionNamespace getVariable ['mission_revive_markers',[]];
 		private _usedMarkers = [];
 		call {
-			private _players = allDeadMen select {_x getVariable ['unit_revive_canBeRevived',false]};
+			private _players = allDeadMen;
 			_players append (player nearEntities ["ACE_bodyBagObject",5000]);
+			_players = _players select {_x getVariable ['unit_revive_canBeRevived',false]};
 
 			{
 				private _marker = _x getVariable ['unit_revive_marker',''];
+				private _pos = getPos _x;
 				if (_marker isEqualTo '') then {
-					private _pos = getPos _x;
 					private _newUnit = _x getVariable ['unit_revive_newUnit',objNull];
 					if (isNull _newUnit) exitWith {};
 					_marker = createMarkerLocal [('marker_revive_'+ (name _newUnit)),_pos];
@@ -51,6 +52,7 @@ _handle = [] spawn {
 					_marker setMarkerDirLocal 0;
 					_x setVariable ['unit_revive_marker',_marker];
 				};
+				_marker setMarkerPosLocal _pos;
 				_usedMarkers pushBack _marker;
 			} forEach _players;
 

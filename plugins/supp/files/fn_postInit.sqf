@@ -104,7 +104,7 @@ a2k_hitBlur = {
     if (alive player) then {
         //if !(isNull objectParent player) exitWith {};
 
-        if (random 1 > 0.8) then {
+        if (random 1 > 0.9) then {
             private _safeWeapons = player getVariable ['ace_safemode_safedWeapons',[]];
             if ((currentWeapon player) in _safeWeapons) exitWith {};
 

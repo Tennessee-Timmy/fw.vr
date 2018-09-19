@@ -25,3 +25,6 @@ private _canBeRevived = _unit getVariable ['unit_revive_canBeRevived',false];
 
 _bag setVariable ['unit_revive_canBeRevived',_canBeRevived,true];
 _bag setVariable ['unit_revive_newUnit',_newUnit,true];
+_bag setVariable ['unit_revive_oldLoadout',(getUnitLoadout _unit),true];
+
+_newUnit setVariable ['unit_revive_oldUnit',_bag,true];

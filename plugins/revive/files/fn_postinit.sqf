@@ -36,6 +36,7 @@ Author:
 };
 
 if (isServer) then {
+	[[""],{_this call revive_fnc_onKilled},"onKilled",true] call respawn_fnc_scriptAdd;
 	[[""],{_this call revive_fnc_onRespawn},"onRespawn",true] call respawn_fnc_scriptAdd;
 	[[""],{_this call revive_fnc_onRespawnUnit},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
 

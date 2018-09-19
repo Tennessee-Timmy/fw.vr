@@ -46,7 +46,7 @@ _zeusList = _zeusList select {
 };
 if (_zeusList isEqualTo []) exitWith {};
 _zeus = _zeusList param [0];
-_zeus setVariable ["owner",_uid,true];
+//_zeus setVariable ["owner",_uid,true];
 _zeus setVariable ["zeus_uid",_uid,true];
 _player assignCurator _zeus;
 _zeus addCuratorEditableObjects [(vehicles + allUnits), true];

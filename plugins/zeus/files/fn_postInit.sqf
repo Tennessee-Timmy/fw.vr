@@ -32,30 +32,33 @@ if (hasInterface && (ZEUS_SETTINGS_ADMINZEUS isEqualTo 2) && (call menus_fnc_isA
 if !(isServer) exitWith {};
 
 // create 10 zeus slots
+[] spawn {
+	uiSleep 1;
+	private _zeusList = missionNamespace getVariable "mission_zeus_list";
+	if (isNil '_zeusList') then {
+		_zeusList = [];
+		missionNamespace setVariable ["mission_zeus_list",_zeusList];
+	};
 
-private _zeusList = missionNamespace getVariable "mission_zeus_list";
-if (isNil '_zeusList') then {
-	_zeusList = [];
-	missionNamespace setVariable ["mission_zeus_list",_zeusList];
-};
+	if (isNil "mission_zeus_group" || {isNull mission_zeus_group}) then {
+		mission_zeus_group = createGroup sideLogic;
+	};
 
-if (isNil "mission_zeus_group" || {isNull mission_zeus_group}) then {
-	mission_zeus_group = createGroup sideLogic;
-};
+	for '_i' from 1 to 3 do {
+		uisleep 1;
+		_zeus = mission_zeus_group createUnit ["ModuleCurator_F", [0,0,0], [], 0, "NONE"];
+		_zeus setVehicleVarName (format ["zeus_%1", (count _zeusList)]);
+		//_zeus setVariable ["owner",_uid];
+		//_zeus setVariable ["zeus_uid",_uid];
 
-for '_i' from 1 to 10 do {
-	_zeus = mission_zeus_group createUnit ["ModuleCurator_F", [0,0,0], [], 0, "NONE"];
-	_zeus setVehicleVarName (format ["zeus_%1", (count _zeusList)]);
-	//_zeus setVariable ["owner",_uid];
-	//_zeus setVariable ["zeus_uid",_uid];
+		_zeus setVariable ['forced',1,true];
+		_zeus setVariable ["playerZeus", true,true];
+		_zeus setVariable ["birdType", "",true];
+		_zeus setVariable ["showNotification", false,true];
+		_zeus setCuratorWaypointCost 0;
+		_zeus allowCuratorLogicIgnoreAreas true;
+		{_zeus setCuratorCoef [_x, 0];} forEach ["place", "edit", "delete", "destroy", "group", "synchronize"];
+		_zeusList pushBack _zeus;
 
-	_zeus setVariable ['forced',1,true];
-	_zeus setVariable ["playerZeus", true,true];
-	_zeus setVariable ["birdType", "",true];
-	_zeus setVariable ["showNotification", false,true];
-	_zeus setCuratorWaypointCost 0;
-	_zeus allowCuratorLogicIgnoreAreas true;
-	{_zeus setCuratorCoef [_x, 0];} forEach ["place", "edit", "delete", "destroy", "group", "synchronize"];
-	_zeusList pushBack _zeus;
-
+	};
 };
