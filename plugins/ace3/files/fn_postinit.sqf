@@ -31,7 +31,7 @@ if (!isServer) then {
 
 //
 if (isServer && ("respawn" in mission_plugins)) then {
-    [[""],{call ace3_fnc_onRespawn},"onRespawn",true] call respawn_fnc_scriptAdd;
+    [[""],{call ace3_fnc_onRespawn},"onKilled",true] call respawn_fnc_scriptAdd;
 };
 
 //ACE 3 CUSTOM =================================================================

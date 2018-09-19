@@ -27,7 +27,7 @@ class CfgRespawnTemplates
 };
 respawnTemplates[] = {"mission_respawn"};
 respawn = 3;
-respawnDelay = 0;
+respawnDelay = 3;
 respawnButton = 1;
 respawnDialog = 0;
 //respawnTemplatesWest[] = {"ace_spectator","Counter","Wave"};
@@ -134,4 +134,9 @@ class Extended_DisplayLoad_EventHandlers {
 	#define MISSION_PLUGIN_XEHDISPLAYLOAD
 		#include "plugins\plugins.cpp"
 	#undef MISSION_PLUGIN_XEHDISPLAYLOAD
+};
+class Extended_FiredBIS_Eventhandlers {
+	#define MISSION_PLUGIN_XEHFIREDBIS
+		#include "plugins\plugins.cpp"
+	#undef MISSION_PLUGIN_XEHFIREDBIS
 };
