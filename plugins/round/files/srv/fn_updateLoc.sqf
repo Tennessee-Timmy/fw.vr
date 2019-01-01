@@ -19,6 +19,8 @@ if !(isServer) exitWith {};
 
 params[['_noAdd',false]];
 
+
+
 // get variables
 private _playedRounds = missionNamespace getVariable ["mission_rounds_played",0];
 private _sidesActive = missionNamespace getVariable ["mission_round_sides_active",[]];
@@ -71,13 +73,38 @@ for '_i' from 1 to _sidesCount do {
 	};
 
 	_side setVariable ['round_sideLocNr',_locNR,true];
+	_side setVariable ['round_sideLoc',_sideLoc,true];
 
 	// todo might not be needed because of ^
+	/*
 	private _nil = {
 		private _unit = _x;
 		_unit setVariable ['unit_round_loc',_sideLoc,true];
 		_unit setVariable ['unit_round_locnr',_locNR,true];
 		false
 	} count _sideUnits;
+	*/
 	false
+};
+
+
+
+if !(_noAdd) then {
+	// run change location code
+	// srv code
+	private _srvCodeFile = format ["plugins\round\code\srv.sqf",''];
+
+	private _onSideChangeCodeSrv = {};
+	if (_srvCodeFile call mission_fnc_checkFile) then {
+		// load the file
+		call compile preprocessFileLineNumbers _srvCodeFile;
+		call _onSideChangeCodeSrv;
+	};
+	[] spawn {
+
+		sleep 1;
+		// remote execute player location code
+		remoteExecCall ['round_fnc_sideSwitch'];
+	};
+
 };

@@ -12,7 +12,7 @@ class menus_template_progress {
   style = 0;
   colorFrame[] = {1,0.5,0.0,1};
   colorBar[] = {1,0.6,0.2,1};
-  texture = "#(argb,8,8,3)color(1,1,1,1)";
+  //texture = "#(argb,8,8,3)color(1,1,1,1)";
   x = 0 + (0 * GUI_GRID_W);
   y = 0 + (5.5 * GUI_GRID_H);
   w = 5  * GUI_GRID_W;

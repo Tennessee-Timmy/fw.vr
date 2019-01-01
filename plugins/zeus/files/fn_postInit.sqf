@@ -44,13 +44,18 @@ if !(isServer) exitWith {};
 		mission_zeus_group = createGroup sideLogic;
 	};
 
-	for '_i' from 1 to 3 do {
+	for '_i' from 0 to 3 do {
 		uisleep 1;
-		_zeus = mission_zeus_group createUnit ["ModuleCurator_F", [0,0,0], [], 0, "NONE"];
-		_zeus setVehicleVarName (format ["zeus_%1", (count _zeusList)]);
+
+		"ModuleCurator_F" createUnit [[0,0,0], (mission_zeus_group), "this setvariable ['BIS_fnc_initModules_disableAutoActivation', false, true];"];
+		if !((count units mission_zeus_group) > _i) then {uisleep 1;};
+		//_zeus = mission_zeus_group createUnit ["ModuleCurator_F", [0,0,0], [], 0, "NONE"];
+		private _zeus = (units mission_zeus_group) # _i;
+
+		_zeus setVehicleVarName ('zeus_' + (str _i));
+		missionNamespace setVariable [('zeus_' + str _i),_zeus,true];
 		//_zeus setVariable ["owner",_uid];
 		//_zeus setVariable ["zeus_uid",_uid];
-
 		_zeus setVariable ['forced',1,true];
 		_zeus setVariable ["playerZeus", true,true];
 		_zeus setVariable ["birdType", "",true];

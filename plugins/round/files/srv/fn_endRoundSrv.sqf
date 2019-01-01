@@ -30,4 +30,5 @@ if (_srvCodeFile call mission_fnc_checkFile) then {
 };
 
 // run start for clients
-remoteExec ['round_fnc_endRound'];
+// todo move this to clients
+//remoteExec ['round_fnc_endRound'];

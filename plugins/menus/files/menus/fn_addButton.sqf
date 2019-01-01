@@ -56,7 +56,7 @@ _buttonCtrl ctrlCommit 0;
 _buttonCtrl ctrlSetText _text;
 
 // Run the code when button is clicked
-_buttonCtrl ctrlSetEventHandler ["buttonClick",_code];
+_buttonCtrl ctrlAddEventHandler ["buttonClick",_code];
 
 // return the control
 _buttonCtrl

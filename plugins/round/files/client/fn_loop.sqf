@@ -18,6 +18,7 @@ Author:
 // Code begins
 if !(hasInterface) exitWith {};
 [] spawn {
+	sleep 1;
 
 	// create hud
 	disableSerialization;
@@ -49,11 +50,18 @@ if !(hasInterface) exitWith {};
 	private _roundTimeStr = '--:--';
 
 
+	private _hasEndRun = false;
+	private _hasPrepRun = false;
+	private _hasStartRun = false;
+	private _hasPreStartRun = false;
+
 	// loop until loop gets disabled
 	waitUntil {
 		private _changeBg = false;
 		private _text = '';
 		private _nr = -1;
+
+		// detrmine current stage
 		call {
 			_ctrlNr = _ctrlNr1;
 			_ctrlText = _ctrlText1;
@@ -61,6 +69,17 @@ if !(hasInterface) exitWith {};
 			private _stage = missionNamespace getVariable 'mission_round_stage';
 			if (isNil '_stage') exitWith {};
 			if (_stage isEqualTo 'end') exitWith {};
+			if (_stage isEqualTo 'endRound') exitWith {
+				if (!_hasEndRun) then {
+					_hasEndRun = true;
+
+					_hasPrepRun = false;
+					_hasStartRun = false;
+					_hasPreStartRun = false;
+
+					player call round_fnc_endRound;
+				};
+			};
 			if (_stage isEqualTo 'aoVote') exitWith {
 				_text = 'Time to vote:';
 				_nr = missionNamespace getVariable ['mission_round_toAO',-1];
@@ -69,17 +88,38 @@ if !(hasInterface) exitWith {};
 				_ctrlText = _ctrlText2;
 			};
 			if (_stage isEqualTo 'preStart') exitWith {
-				_text = 'Time until game start:';
+				_text = 'Setting up the next round:';
 				_nr = missionNamespace getVariable ['mission_round_toStart',-1];
+
+				if (!_hasPreStartRun) then {
+					_hasPreStartRun = true;
+
+					player call round_fnc_onRespawnUnit;
+				};
 			};
 			if (_stage isEqualTo 'preRoundSwitch') exitWith {
 				_text = 'Switching Sides:';
 				_nr = missionNamespace getVariable ['mission_round_toStart',-1];
 			};
 			if (_stage isEqualTo 'prep') then {
+				if (!_hasPrepRun) then {
+					_hasPrepRun = true;
+
+					_hasEndRun = false;
+
+					player call round_fnc_prepRound;
+				};
 				_changeBg = true;
 				_text = 'Time until round start:';
 				_nr = missionNamespace getVariable ['mission_round_toPrep',-1];
+			};
+
+			if (_stage isEqualTo 'live') then {
+				if (!_hasStartRun) then {
+					_hasStartRun = true;
+
+					player call round_fnc_startRound;
+				};
 			};
 
 
@@ -268,11 +308,12 @@ if !(hasInterface) exitWith {};
 
 
 			// make sure scores exist
-			private _scores =+ (missionNamespace getVariable ['mission_round_sides_active',[]]);
+			private _activeSides =+ (missionNamespace getVariable ['mission_round_sides_active',[]]);
 
 			// get player side
-			private _side = player getVariable ['unit_round_side',''];
-			_sidePlayer = toLower _side;
+			private _side = player call round_fnc_findPlayerSide;
+			private _sideName = _side getVariable ['round_sideName',''];
+			_sidePlayer = toLower _sideName;
 
 			// if player has no side, exit
 			if (_sidePlayer isEqualTo '') exitWith {};
@@ -300,11 +341,11 @@ if !(hasInterface) exitWith {};
 			} count _lockedSide;
 
 			// loop through all scores/sides
-			while {!(_scores isEqualTo [])} do {
+			while {!(_activeSides isEqualTo [])} do {
 				call {
 
 					// get params from current side
-					_side = _scores deleteAt 0;
+					_side = _activeSides deleteAt 0;
 
 					// make sure side is not empty
 					if (_side isEqualTo objNull) exitWith {};
@@ -319,7 +360,7 @@ if !(hasInterface) exitWith {};
 					if ((toLower _sideName) in _lockedNames) exitWith {};
 
 					// if name is same as player side name, save it as player side
-					if ((toLower _sideName) isEqualTo _sidePlayer) then {
+					if ((toLower _sideName) isEqualTo _sidePlayer) exitWith {
 						_playerSide = [_sideName,_sideWins,_side];
 					};
 
@@ -333,7 +374,7 @@ if !(hasInterface) exitWith {};
 							// if we are replacing a side, side name won't be empty
 							// add the score we are replacing back to the check array (so if it was 1st it can be rechecked for 2nd/3rd)
 							if !(_bestSideName isEqualTo '') then {
-								_scores pushBackUnique _bestSide;
+								_activeSides pushBackUnique _bestSide;
 							};
 
 
@@ -344,7 +385,9 @@ if !(hasInterface) exitWith {};
 				};
 			};
 
-
+			reverse _topSides;
+			_topSides pushBack _playerSide;
+			reverse _topSides;
 
 			// if playerside is not in the top sides, add player side to the list of sides
 			if !(_playerSide in _topSides) then {
@@ -369,7 +412,7 @@ if !(hasInterface) exitWith {};
 
 					private _color = "#aa5a00";
 					if ((toLower _bestSide) isEqualTo _sidePlayer) then {
-						_color = "#005aaa";
+						_color = "#535aaa";
 					};
 
 					// combine the elements of the sides

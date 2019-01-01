@@ -36,7 +36,7 @@ if (isNil '_sidesActive') exitWith {};
 private _foundSide = [];
 
 {
-	private _sideName =  _x param [0,''];
+	private _sideName =  _x getVariable ['round_sideName',''];
 	if (_sideName isEqualTo _side) exitWith {
 		_foundSide = _sidesActive select _forEachIndex;
 	};
@@ -55,7 +55,7 @@ call {
 	if (_name isEqualTo 'wins') exitWith {
 
 		_sideWins = _sideWins + _value;
-		_sideData set [1,_sideWins];
+		_foundSide setVariable ['round_sideWins',_sideWins,true];
 	};
 	if (_name isEqualTo 'unitsAdd') exitWith {
 
@@ -75,6 +75,10 @@ call {
 	_foundSide setVariable [_name,_value,true];
 };
 
+
+// todo WHAT? this is not needed
+/*
 private _updatedSide = [_sideName,_sideUnits,_sideData];
 _sidesActive pushBack _updatedSide;
 missionNamespace setVariable ["mission_round_sides_active",_sidesActive];
+*/

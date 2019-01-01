@@ -19,6 +19,27 @@ Author:
 // Code begins
 if !(hasInterface) exitWith {};
 
+// find player side
+private _side = player call round_fnc_findPlayerSide;
+
+// get variables from side
+private _sideName = _side getVariable ['round_sideName',''];
+private _sideLoc = _side getVariable ['round_sideLoc',objNull];
+private _sideLocNR = _side getVariable ['round_sideLocNR',99];
+private _sideUnits = _side getVariable ['round_sideUnits',[]];
+private _sideNr = _side getVariable ['round_sideNr',99];
+private _sideLoadout = _side getVariable ['round_sideLoadout',''];
+
+if (_sideName isEqualTo '') exitWith {player setDamage 1;};
+
+private _unit = player;
+
+// disable simulation to avoid weird bugs
+_unit enableSimulation false;
+
+// update player varaibles
+//player setVariable ['unit_round_side',_sideName,true];
+
 private _waited = 0;
 // wait for respawn
 waitUntil {
@@ -30,7 +51,6 @@ waitUntil {
 // exit if waited 2k frames (200/30fps = ~6 seconds)
 if (_waited > 200) exitWith {player setdamage 1;};
 
-private _unit = player;
 _unit setVelocity [0,0,0];
 
 _unit allowDamage false;
@@ -42,11 +62,18 @@ if (!isNil 'ACE_medical_fnc_treatmentAdvanced_fullHeal') then {
 _unit setDamage 0;
 
 // loadout
-[_unit] call loadout_fnc_unit;
+// From side loadout, otherwise just initialize unit
+if !(_sideLoadout isEqualTo '') then {
+	//[_unit,_sideLoadout] call loadout_fnc_unit;
+	_unit setVariable ["unit_loadout_faction",_sideLoadout,true];
+} else {
+	//[_unit] call loadout_fnc_unit;
+};
+
+// disable simulation to avoid weird bugs
+_unit enableSimulation false;
 
 //--- move unit to location
-private _loc = _unit getVariable ['unit_round_loc',(ROUND_SETTING_AOLIST select 0 select 1)];
-
 private _i = 0;
 waitUntil {
 	_i = _i + 1;
@@ -56,49 +83,49 @@ waitUntil {
 	call {
 
 		// if location is array
-		if (_loc isEqualType []) exitWith {
+		if (_sideLoc isEqualType []) exitWith {
 
 			// if array has 3 elements, it's a ASL pos
-			if ((count _loc) isEqualTo 3) exitWith {
-				_unit setPosASL _loc;
+			if ((count _sideLoc) isEqualTo 3) exitWith {
+				_unit setPosASL _sideLoc;
 				true
 			};
-			if ((count _loc) isEqualTo 2) then {
-				_loc = _loc select 0;
+			if ((count _sideLoc) isEqualTo 2) then {
+				_sideLoc = _sideLoc select 0;
 			};
 
 			// it's an marker array or a inArea array
-			_unit setPos (_loc call CBA_fnc_randPosArea);
+			_unit setPos (_sideLoc call CBA_fnc_randPosArea);
 			true
 		};
 
 		// if it's a marker
-		if (_loc isEqualType '') exitWith {
-			_unit setPos (getMarkerPos _loc);
+		if (_sideLoc isEqualType '') exitWith {
+			_unit setPos (getMarkerPos _sideLoc);
 			true
 		};
 
 		// if it's a object
-		if (_loc isEqualType objNull) exitWith {
+		if (_sideLoc isEqualType objNull) exitWith {
 
 			// if it has not trigger area, it's a normal object
-			if ((triggerArea _loc) isEqualTo []) exitWith {
-				_unit setPosASL (getposASL _loc);
+			if ((triggerArea _sideLoc) isEqualTo []) exitWith {
+				_unit setPosASL (getposASL _sideLoc);
 				true
 			};
 
 			// there msut be a area, so it's a trigger, call randposArea
-			private _height = (getposASL _loc)select 2;
-			private _pos = (_loc call CBA_fnc_randPosArea);
+			private _height = (getposASL _sideLoc)select 2;
+			private _pos = (_sideLoc call CBA_fnc_randPosArea);
 			_pos set [2,_height];
 			_unit setPosASL _pos;
 			true
 		};
 
 		// if it's a location call randpos area
-		if (_loc isEqualType locationNull) exitWith {
-			private _height = (getposASL _loc)select 2;
-			private _pos = (_loc call CBA_fnc_randPosArea);
+		if (_sideLoc isEqualType locationNull) exitWith {
+			private _height = (getposASL _sideLoc)select 2;
+			private _pos = (_sideLoc call CBA_fnc_randPosArea);
 			_pos set [2,_height];
 			_unit setPosASL _pos;
 			true
@@ -109,6 +136,8 @@ waitUntil {
 		false
 	};
 };
+
+// if player didn't get a position in 10 tries, kill him.
 if (_i > 10) exitWith {
 	_unit setDamage 1;
 };
@@ -116,6 +145,8 @@ if (_i > 10) exitWith {
 _unit setVelocity [0,0,0];
 _unit allowDamage true;
 
+// enable simulation to avoid weird bugs
+_unit enableSimulation true;
 
 // AO code
 private _aoName = missionNamespace getVariable ['mission_round_aoName',''];
@@ -130,22 +161,20 @@ if (_aoCodeFile call mission_fnc_checkFile) then {
 
 
 // location code
-private _locnr = _unit getVariable ['unit_round_locnr',99];
-private _locCodeFile = format ["plugins\round\code\loc_%1.sqf",_locnr];
+private _locCodeFile = format ["plugins\round\code\loc_%1.sqf",_sideLocNR];
 
 private _onRoundPrepCodeLoc = {};
 if (_locCodeFile call mission_fnc_checkFile) then {
 	// load the file
 	call compile preprocessFileLineNumbers _locCodeFile;
-	[_unit,_locnr] call _onRoundPrepCodeLoc;
+	[_unit,_sideLocNR] call _onRoundPrepCodeLoc;
 };
 
 
 // side code
-private _side = _unit getVariable ['unit_round_side',''];
-_side = toLower _side;
+_sideName = toLower _sideName;
 
-private _codeFile = format ["plugins\round\code\%1.sqf",_side];
+private _codeFile = format ["plugins\round\code\%1.sqf",_sideName];
 
 private _onRoundPrepCodeSide = {};
 if (_codeFile call mission_fnc_checkFile) then {
@@ -165,25 +194,4 @@ if (_clientCodeFile call mission_fnc_checkFile) then {
 };
 
 //--- save forced friendlies (for score)
-call {
-
-	// get current active sides
-	private _sides = (missionNamespace getVariable ['mission_round_sides_active',[]]);
-
-	// get player side
-	private _side = player getVariable ['unit_round_side',''];
-	_sidePlayer = toLower _side;
-
-	// loop through sides
-	private _nil = {
-		private _side = _x;
-		private _sideName = _side getVariable ['round_sideName',''];
-		private _sideUnits = _side getVariable ['round_sideUnits',[]];
-
-		// if side name is same as player side name, update forcedfriends for player
-		if ((toLower _sideName) isEqualTo _sidePlayer) exitWith {
-			player setVariable ['unit_score_forcedFriends',_sideUnits,true];
-		};
-		false
-	} count _sides;
-};
+player setVariable ['unit_score_forcedFriends',_sideUnits,true];

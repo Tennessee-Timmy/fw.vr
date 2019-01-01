@@ -22,7 +22,7 @@ if !(isServer) exitWith {};
 missionNamespace setVariable ["mission_type",{call round_fnc_onRespawn},true];
 
 // add onRespawnUnit script
-[[""],{call round_fnc_onRespawnUnit},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
+[[""],{player call round_fnc_onRespawnUnit},"onRespawnUnit",true] call respawn_fnc_scriptAdd;
 
 // Start the server timer
 round_main_loop = [] spawn round_fnc_loopGameSrv;

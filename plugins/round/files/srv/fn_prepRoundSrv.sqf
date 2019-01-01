@@ -19,12 +19,17 @@ Author:
 // Code begins
 if !(isServer) exitWith {};
 
+// delete dead bodies
+private _nil = {deleteVehicle _x;false}count allDead;
+
 // respawn everyone * now on client
-[] call respawn_fnc_respawn;
+// todo moved this to prestart
+//[] call respawn_fnc_respawn;
 sleep 1;
 
 // run prep for clients
-remoteExec ['round_fnc_prepRound'];
+// todo only on clients based on variable
+//remoteExec ['round_fnc_prepRound'];
 
 
 // srv code

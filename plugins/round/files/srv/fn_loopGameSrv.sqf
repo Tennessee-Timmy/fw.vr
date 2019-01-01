@@ -33,6 +33,8 @@ ten_start3 = diag_tickTime;
 
 // wait for game to start
 sleep 1;
+// delete ALL ao
+[true,'',true] spawn round_fnc_loadAO;
 
 private _sides = + (missionNamespace getVariable ["mission_round_sides",ROUND_SETTING_SIDES]);
 private _mode = missionNamespace getVariable ["mission_round_mode",ROUND_PARAM_MODE];
@@ -138,6 +140,8 @@ while {isNil "disable_round_loopGameSrv"} do {
 	// this will run until the first game(set of rounds) is completed
 	call round_fnc_loopSrv;
 
+	sleep 10;
+
 	_gamesPlayed = _gamesPlayed + 1;
 	missionNamespace setVariable ["mission_round_gamesPlayed",_gamesPlayed,true];
 
@@ -158,4 +162,5 @@ while {isNil "disable_round_loopGameSrv"} do {
 		call compile preprocessFileLineNumbers _srvCodeFile;
 		call _onGameEndCodeSrv;
 	};
+	sleep 20;
 };

@@ -52,13 +52,13 @@ private _currentSides = [];
 for '_i' from 1 to _sidesAmount do {
 	if (_sides isEqualTo []) exitWith {};
 	private _sideArr = _sides deleteAt 0;
-	private _sideName = _sideArr deleteAt 0;
+	_sideArr params ['_sideName','_sideUnitArray',['_sideLoadout','']];
 	private _sideUnits = [];
 
 	// check if sidename in lockednames
 	if ((toLower _sideName) in _lockedNames) exitWith {};
 
-	// loop through current side elements (units)
+	// loop through current side unit array, this adds all suitable units to this side
 	private _nil = {
 		private _member = _x;
 		call {
@@ -98,7 +98,7 @@ for '_i' from 1 to _sidesAmount do {
 			};
 		};
 		false
-	} count _sideArr;
+	} count _sideUnitArray;
 
 
 	private _side = objNull;
@@ -119,13 +119,16 @@ for '_i' from 1 to _sidesAmount do {
 	// add/update name and units
 	_side setVariable ['round_sideName',_sideName,true];
 	_side setVariable ['round_sideUnits',_sideUnits,true];
+	_side setVariable ['round_sideLoadout',_sideLoadout,true];
 
 	// add site variable to units on the side
 	// todo won't need cuz sideUnits is public
+	/*
 	private _nil = {
 		_x setVariable ['unit_round_side',_sideName,true];
 		false
 	} count _sideUnits;
+	*/
 
 	// if there side units array is not empty, add the side to current sides
 	//if !(_sideUnits isEqualTo []) then {

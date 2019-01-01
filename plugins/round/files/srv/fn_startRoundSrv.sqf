@@ -31,4 +31,5 @@ if (_srvCodeFile call mission_fnc_checkFile) then {
 missionNamespace setVariable ['mission_round_msg','START!',true];
 
 // run start for clients
-remoteExec ['round_fnc_startRound'];
+// do this on clients now todo
+//remoteExec ['round_fnc_startRound'];

@@ -19,3 +19,4 @@ Author:
 
 // Update spec modes
 ["Initialize", [player, [], false]] call BIS_fnc_EGSpectator;
+//["Initialize", [player, [], false,false,true]] call BIS_fnc_EGSpectator;	// changed for revive system (disables freecam)

@@ -13,12 +13,14 @@ class PLUGIN {
 	class srv {
 		file = QPLUGIN_PATHFILE(srv);
 		class aoSrv {};
+		class checkGameWin {};
+		class checkRoundWin {};
 		class endRoundSrv {};
 		class loopGameSrv {};
 		class loopSrv {};
+		class markersSrv {};
 		class prepRoundSrv {};
 		class setup {};
-		class markersSrv {};
 		class startRoundSrv {};
 		class update {};
 		class updateLoc {};
@@ -27,11 +29,13 @@ class PLUGIN {
 	class client {
 		file = QPLUGIN_PATHFILE(client);
 		class endRound {};
+		class findPlayerSide {};
 		class loop {};
 		class onRespawn {};
 		class onRespawnUnit {};
 		class prepRound {};
 		class startRound {};
+		class sideSwitch {};
 		class vote {};
 	};
 };

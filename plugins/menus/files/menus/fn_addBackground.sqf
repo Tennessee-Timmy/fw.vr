@@ -8,13 +8,16 @@ Description:
 	h = 20  * GUI_GRID_H;
 
 Parameters:
-0:	_color		- array
-	0:	_r		- Red
-	1:	_g		- Green
-	2:	_b		- Blue
-	3:	_a		- Opacity (1 = 100% visible / 0 = invisible)
-1:	_pos		- Postion and size of the button
-2:	_idc		- integer, idc to use for this control
+0:	_color			- array
+	0:	_r			- Red
+	1:	_g			- Green
+	2:	_b			- Blue
+	3:	_a			- Opacity (1 = 100% visible / 0 = invisible)
+1:	_pos			- Postion and size of the button
+2:	_idc			- integer, idc to use for this control
+3:	_display		- custom display to use this on
+4:	_controlGroup	- custom control group
+
 Returns:
 	_control 	- control of the button
 Examples:

@@ -20,6 +20,17 @@ if !(hasInterface) exitWith {};
 
 private _unit = player;
 
+// find player side
+private _side = _unit call round_fnc_findPlayerSide;
+
+// get variables from side
+private _sideName = _side getVariable ['round_sideName',''];
+private _sideLoc = _side getVariable ['round_sideLoc',objNull];
+private _sideLocNR = _side getVariable ['round_sideLocNR',99];
+private _sideUnits = _side getVariable ['round_sideUnits',[]];
+private _sideNr = _side getVariable ['round_sideNr',99];
+
+if (_sideName isEqualTo '') exitWith {};
 
 // AO code
 private _aoName = missionNamespace getVariable ['mission_round_aoName',''];
@@ -33,8 +44,7 @@ if (_aoCodeFile call mission_fnc_checkFile) then {
 };
 
 // location code
-private _locnr = _unit getVariable ['unit_round_locnr',99];
-private _locCodeFile = format ["plugins\round\code\loc_%1.sqf",_locnr];
+private _locCodeFile = format ["plugins\round\code\loc_%1.sqf",_sideLocNR];
 
 private _onRoundStartCodeLoc = {};
 if (_locCodeFile call mission_fnc_checkFile) then {
@@ -44,10 +54,9 @@ if (_locCodeFile call mission_fnc_checkFile) then {
 };
 
 // side code
-private _side = _unit getVariable ['unit_round_side',''];
-_side = toLower _side;
+_sideName = toLower _sideName;
 
-private _codeFile = format ["plugins\round\code\%1.sqf",_side];
+private _codeFile = format ["plugins\round\code\%1.sqf",_sideName];
 
 private _onRoundStartCodeSide = {};
 if (_codeFile call mission_fnc_checkFile) then {

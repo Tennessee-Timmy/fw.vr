@@ -27,7 +27,8 @@
 #include "zeus\files\main.cpp"
 #include "tasks\files\main.cpp"
 #include "tpb\files\main.cpp"
-#include "ace_spec\files\main.cpp"
+//#include "ace_spec\files\main.cpp"
+#include "spec\files\main.cpp"
 //
 // radio - choose 1
 #include "acre\files\main.cpp"
@@ -46,4 +47,4 @@
 
 
 // Put any extra (homebrew) plugins here:
-
+#include "health\files\main.cpp"

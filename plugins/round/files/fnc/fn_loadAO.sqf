@@ -62,7 +62,9 @@ if (_onlyReplace) then {
 private _stuff = missionNamespace getVariable [_varName,[]];
 
 // error if no stuff loaded
-if (_stuff isEqualTo []) exitWith {systemChat 'round_fnc_loadAO failed no ao to load'};
+if (_stuff isEqualTo []  && !_deleteOnly) exitWith {systemChat 'round_fnc_loadAO failed no ao to load'};
+
+private _oldThings = (allDead + allUnits + vehicles + allMissionObjects '');
 
 // delete all AOs:
 {
@@ -86,7 +88,7 @@ if (_stuff isEqualTo []) exitWith {systemChat 'round_fnc_loadAO failed no ao to 
 			deleteVehicle _x;
 		};
 	} forEach (
-		(allDead + allUnits + vehicles) inAreaArray _marker
+		_oldThings inAreaArray _marker
 		/* SLOW *//*((allMissionObjects "") inAreaArray _marker) - allUnits*/
 	);
 	false
@@ -100,7 +102,7 @@ private _i = 0;
 
 // iterate through all the saved objects
 private _nil = {
-	if (_i > 30) then {
+	if (_i > 10) then {
 		sleep 0.01;
 		_i = 0;
 	} else {
@@ -111,23 +113,25 @@ private _nil = {
 	_saved call {
 
 		// get data for the saved object:
-		params ['_obj', '_name','_class','_posASL','_VDU','_inv','_extra'];
+		params [['_obj',objNull], '_name','_class','_posASL','_VDU','_inv','_extra'];
 		_inv params [['_items',[]],['_weapons',[]],['_mags',[]],['_bags',[]]];
 		_extra params ['_dmg','_sim','_dam'];
 
 
 		private _isNew = false;
+		if (_obj isKindOf 'AllVehicles') then {
+			deleteVehicle _obj;
+			_obj = objNull;
+		};
 
 		// check if the object does not exist
-		if ((isNil '_obj') || {(isNull _obj)}) then {
+		if (isNull _obj) then {
 
 			// object was not fine, so it will be re-created
 			_obj = createVehicle [_class,[0,0,1000+(random 5000)],[],0,"NONE"];
 			_createdCount = _createdCount + 1;
 			_isNew = true;
-			systemChat str _saved;
 			_saved set [0,_obj];
-			systemChat str _saved;
 		} else {
 			// object was fine, so it can still be used
 		};
@@ -183,6 +187,7 @@ private _nil = {
 		_obj allowDamage false;
 		//_obj enableSimulation false;
 		_obj setDamage 0;
+		_obj setVelocity [0,0,0];
 
 		// set positions:
 		_obj setPosASL (_posASL);
@@ -192,15 +197,15 @@ private _nil = {
 		[_obj,_sim,_posASL,_VDU,_dmg,_dam,_isNew] spawn {
 			params['_obj','_sim','_posASL','_VDU','_dmg','_dam','_isNew'];
 			if (_isNew) then {
-				sleep (random 1);
-				for '_i' from 1 to (ceil(random 3)) do {
+				for '_i' from 0 to 3 do {
+					sleep (random 1);
 					if (isNil '_obj' || {isNull _obj}) exitWith {};
 					_obj setPosASL (_posASL);
 					_obj setVectorDirAndUp _VDU;
 					_obj setVelocity [0,0,0];
-					sleep 1;
 				};
 			};
+			sleep 1;
 			if (isNil '_obj' || {isNull _obj}) exitWith {};
 			_obj allowDamage _dmg;
 			_obj setDamage _dam;

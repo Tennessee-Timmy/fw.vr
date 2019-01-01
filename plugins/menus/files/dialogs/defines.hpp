@@ -139,9 +139,9 @@
 //--- New grid for new A3 displays
 #define GUI_GRID_WAbs			((safezoneW / safezoneH) min 1.2)
 #define GUI_GRID_HAbs			(GUI_GRID_WAbs / 1.2)
-#define GUI_GRID_W			(safezoneW / 40)
+#define GUI_GRID_W			(safezoneWAbs / 40)
 #define GUI_GRID_H			(safezoneH / 25)
-#define GUI_GRID_X			(safezoneX)
+#define GUI_GRID_X			(safezoneXAbs)
 #define GUI_GRID_Y			(safezoneY)
 //
 #define GUI_CTRL_W			(GUI_GRID_W)

@@ -94,9 +94,9 @@ class round_rsc_hud
 			idc = 9002;
 			type = CT_STRUCTURED_TEXT;
 
-			x = GUI_GRID_X + (15 * GUI_CTRL_W);
+			x = GUI_GRID_X + (12.5 * GUI_CTRL_W);
 			y = GUI_GRID_Y + (10.5 * GUI_CTRL_H);
-			w = 10* GUI_CTRL_W;
+			w = 15* GUI_CTRL_W;
 			h = 1* GUI_CTRL_H;
 
 			sizeEx = GUI_TEXT_SIZE_SMALL; // Text size
@@ -125,7 +125,7 @@ class round_rsc_hud
 		{
 			idc = 9022;
 
-			x = GUI_GRID_X + (15 * GUI_CTRL_W);
+			//x = GUI_GRID_X + (15 * GUI_CTRL_W);
 			y = GUI_GRID_Y + (16.5 * GUI_CTRL_H);
 
 		};
@@ -134,9 +134,9 @@ class round_rsc_hud
 			idc = 9003;
 			type = CT_STRUCTURED_TEXT;
 
-			x = GUI_GRID_X + (18 * GUI_CTRL_W);
+			x = GUI_GRID_X + (16 * GUI_CTRL_W);
 			y = GUI_GRID_Y + (11.5 * GUI_CTRL_H);
-			w = 4* GUI_CTRL_W;
+			w = 8* GUI_CTRL_W;
 			h = 2* GUI_CTRL_H;
 
 			sizeEx = GUI_TEXT_SIZE_MEDIUM; // Text size
@@ -164,7 +164,7 @@ class round_rsc_hud
 		{
 			idc = 9023;
 
-			x = GUI_GRID_X + (18 * GUI_CTRL_W);
+			//x = GUI_GRID_X + (18 * GUI_CTRL_W);
 			y = GUI_GRID_Y + (17.5 * GUI_CTRL_H);
 
 		};
@@ -173,9 +173,9 @@ class round_rsc_hud
 			idc = 9004;
 			type = CT_STRUCTURED_TEXT;
 
-			x = GUI_GRID_X + (15 * GUI_CTRL_W);
+			x = GUI_GRID_X + (13 * GUI_CTRL_W);
 			y = GUI_GRID_Y + (8.5 * GUI_CTRL_H);
-			w = 10* GUI_CTRL_W;
+			w = 14* GUI_CTRL_W;
 			h = 3* GUI_CTRL_H;
 
 			sizeEx = GUI_TEXT_SIZE_SMALL; // Text size
@@ -214,7 +214,7 @@ class round_rsc_hud
 			sizeEx = GUI_TEXT_SIZE_SMALL; // Text size
 			size = GUI_TEXT_SIZE_SMALL; // Text size
 
-			colorBackground[] = {0.1,0.1,0.1,0.0};
+			colorBackground[] = {0.9,0.9,0.9,0.0};
 			colorText[] = {0.1,0.1,0.1,0.5};
 
 			text = ""; // icon
@@ -223,14 +223,14 @@ class round_rsc_hud
 			fixedWidth = 0;
 			onLoad = "";
 			class Attributes {
-				font = "EtelkaMonospaceProBold";
+				font = "PuristaBold";
 				//color = "#b33333";
 				color = "#ffffff";
 				align = "center";
 				valign = "middle";
 				shadow = true;
 				shadowColor = "#000000";
-				size = 1;
+				size = 0.8;
 			};
 		};
 		class round_time : round_template
