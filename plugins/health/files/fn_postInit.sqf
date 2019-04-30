@@ -1580,7 +1580,15 @@ _stopBleeding = [
     _unit setVariable ['unit_health_unconHandle',_unconHandle];
 }] call CBA_fnc_addEventHandler;
 
-
+if (hasInterface) then {
+    // remove ace actions
+    _at = ace_interact_menu_ActSelfNamespace getvariable (typeOf player);
+    {
+        if ((toLower (_x#0#0)) in ['medical','medical_menu']) then {
+            _at#0#1 deleteAt _forEachIndex;
+        };
+    }forEach _at#0#1;
+};
 
 
 
@@ -1672,10 +1680,53 @@ function ten_dl2 (url) {
 //setTimeout(ten_dl($(this).attr('href')),ten_lastTime);
 
 
+//--- click
+// get all links
+var ten_arr = [];
+var myLinks2 = document.getElementsByClassName('postContainer replyContainer noFile');
+
+var myLinks = document.getElementsByClassName('postContainer replyContainer');
+ten_arr = ten_arr.concat(Object.values(myLinks));
+ten_arr = ten_arr.concat(Object.values(myLinks2));
+
+//
+var ten_str = '';
+for (i = 0;i < ten_arr.length; i++) {
+    var i_obj = ten_arr[i];
+    var i_text = i_obj.innerHTML.replace(/<(?:.|\n)*?>/gm, '').split('&gt;');
+    i_text = i_text[i_text.length -1];
+    i_split = i_text.split(' ');
+    if (i_split[12] === "wait78" || i_split[12] === "wait" || i_split[13] === "wait78") {
+        i_split = i_split.splice(15);
+    };
+    if (typeof i_text === 'string' && ((i_split.length) > 6)) {
+        var i_str = i_obj.id.slice(2);
+        ten_str = ten_str + '>>' + i_str + '\n';
+    } else {
+        //console.log('REMOVE:' + i_obj.id.slice(2) + ' TXT:' + i_text);
+
+    };
+};
+console.log(ten_str);
+//&gt;
+
+//document.getElementsByClassName('postContainer replyContainer noFile')[0].outerHTML
+    //var i_text = i_obj.outerHTML.split('<br>')[2];
+
+const copyToClipboard = str => {
+    const el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+};
 
 
-
-
+var ten_nextTime = 0;
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -1703,3 +1754,74 @@ $(document).ready(function() {
 
     ten_dl(ten_arr);
 });*/
+/*
+```sqf
+
+private _unit = _x;
+private _pos = player worldToModelVisual (getPosVisual _unit);
+
+private _maxX = safeZoneW/40; //width of the ctrl
+private _maxY = safeZoneH/25; //height of the ctrl
+private _centerX = (safeZoneX+safeZoneW)/2 + (_maxX /2); // center of the main ctrl
+private _centerY = (safeZoneY+safeZoneH)/2 + (_maxY /2); // center of the main ctrl
+
+private _startX = _centerX - (_maxX /2);
+private _startY = _centerY - (_maxY /2);
+private _endX = _centerX + (_maxX /2);
+private _endY = _centerY + (_maxY /2);
+
+private _x = linearConversion [-30,30,_pos#0,_startX,_endX];
+private _y = linearConversion [-30,30,_pos#1,_starty,_endy];
+
+private _ctrlPos = [_x,_y]; // position inside
+```
+*/
+
+/*
+//v2
+```sqf
+
+private _unit = _x;
+private _unitID = _unit getVariable ['unit_diw_dui_id',nil];
+if (isNil '_unitID') then {
+    _unitID = (missionNamespace getVariable ['mission_diw_dui_lastID',0])+1;
+    missionNamespace setVariable ['mission_diw_dui_lastID',_unitID];
+    _unit setVariable ['unit_diw_dui_id',_unitID];
+};
+
+private _pos = player worldToModelVisual (getPosVisual _unit);
+
+// todo direction in relation to player direction??
+private _dir = getDir _unit;
+
+private _w = safeZoneW/40; //width of the ctrl
+private _h = safeZoneH/25; //height of the ctrl
+
+private _x = linearConversion [-30,30,_pos#0,0,_w];
+private _y = linearConversion [-30,30,_pos#1,0,_h,false];
+
+private _ctrlPos = [_x,_y]; // position inside the ctrlGroup
+
+disableSerialization;
+private _display = (findDisplay 69696969);
+private _ctrlGrp = _display displayCtrl 69696969;
+
+private _ctrl = _ctrlGrp getVariable [('ctrl_diw_unit_' + str _unitID),nil];
+if (isNil '_ctrl') then {
+    _ctrl = _display ctrlCreate ['RscPicture',-1,_ctrlGrp];
+
+    // todo setText (for picture)
+    //
+
+    _ctrlGrp setVariable [('ctrl_diw_unit_' + str _unitID),_ctrl];
+};
+
+_ctrl ctrlSetPosition _ctrlPos;
+_ctrl ctrlSetAngle [_dir,0.5,0.5,false];
+_ctrl ctrlCommit 0;
+
+// todo set fade if further alway
+//private _fade = [25,35,abs(_pos#0 max _pos#1),1,0,true];
+//_ctrl ctrlSetTextColor [1,1,1,(_fade)];
+
+```*/

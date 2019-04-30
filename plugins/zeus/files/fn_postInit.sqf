@@ -44,11 +44,14 @@ if !(isServer) exitWith {};
 		mission_zeus_group = createGroup sideLogic;
 	};
 
+	uiSleep 1;
+
 	for '_i' from 0 to 3 do {
 		uisleep 1;
 
 		"ModuleCurator_F" createUnit [[0,0,0], (mission_zeus_group), "this setvariable ['BIS_fnc_initModules_disableAutoActivation', false, true];"];
-		if !((count units mission_zeus_group) > _i) then {uisleep 1;};
+		waitUntil {((count units mission_zeus_group) > _i)};
+		//if !((count units mission_zeus_group) > _i) then {uisleep 1;};
 		//_zeus = mission_zeus_group createUnit ["ModuleCurator_F", [0,0,0], [], 0, "NONE"];
 		private _zeus = (units mission_zeus_group) # _i;
 

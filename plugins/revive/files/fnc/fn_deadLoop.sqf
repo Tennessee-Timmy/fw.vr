@@ -69,6 +69,10 @@ _revive_deadHandle = [] spawn {
 		// if time until next wave is 0, allow respawning
 		if (_toWaveComplete <= 0) then {
 
+			// open mission menu
+			call menus_fnc_menusOpen;
+			call revive_fnc_menu;
+
 			player setVariable ['unit_revive_canRespawn',true];
 
 			private _toWaveEnd = (30 - (abs _toWaveComplete));
@@ -89,7 +93,7 @@ _revive_deadHandle = [] spawn {
 		};
 
 		if (CBA_Missiontime >= _nextTextTime) then {
-			[_text,false,_duration] call respawn_fnc_deadText;
+			//[_text,false,_duration] call respawn_fnc_deadText;
 			missionNamespace setVariable ['mission_revive_nextTextTime',(CBA_Missiontime + _nextTextTimeWait)];
 		};
 
