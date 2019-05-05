@@ -80,7 +80,7 @@ onEachFrame {
 		angle = 360+angle;
 	};
 
-	alpha = alpha - ([0.0005,0.005] select (alpha > 0.5));
+	alpha = alpha - ([0.0025,0.005] select (alpha > 0.3));
 	if (alpha < 0) then {ctrlDelete ctrl;onEachFrame {}};
 };
 

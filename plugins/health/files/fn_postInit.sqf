@@ -16,7 +16,7 @@ Author:
 ---------------------------------------------------------------------------- */
 #include "script_component.cpp"
 
-mission_health_fullHP = 100000;
+mission_health_fullHP = 10000;
 mission_health_fullAP = 6;
 mission_health_fullAPH = 3;
 
@@ -58,12 +58,12 @@ health_fnc_onHitPart = {
     private _aph_startedAt = _aph;
 
     private _isBleeding = false;
+    private _killedBy = objNull;
 
     // loop through all the organs/parts damaged
     private _nil = {
         _x params ["_target", "_shooter", "_projectile", "_position", "_velocity", "_selection", "_ammo", "_vector", "_radius", "_surfaceType", "_isDirect"];
 
-        _killedBy = objNull;
 
         // determine speed of the projectile at impact
         private _speed = 0;
@@ -282,7 +282,7 @@ health_fnc_onHitPart = {
     };
 
     // remoteExec the hp update to the target
-    [_unit,(-_totalDamage),true,_isBleeding] remoteExec ['health_fnc_hpUpdate',_unit];
+    [_unit,(-_totalDamage),true,_isBleeding,_killedBy] remoteExec ['health_fnc_hpUpdate',_unit];
 
     // update ap on target if it's changed
     if (_ap != _ap_startedAt) then {
@@ -467,7 +467,7 @@ health_fnc_hpUpdate = {
     // [player,300,true,true] call health_fnc_hpUpdate;
 
     disableSerialization;
-    params ['_unit','_value','_isAdded',['_isBleeding',false]];
+    params ['_unit','_value','_isAdded',['_isBleeding',false],['_damageFrom',objNull]];
 
     if (!local _unit) exitWith {};
     private _hp = [_unit] call health_fnc_hpGet;
@@ -495,8 +495,196 @@ health_fnc_hpUpdate = {
     [_unit,_hp] call health_fnc_hpSet;
 
 
-    // todo _isBleeding always true
+    // todo _isBleeding always true if damage higher than 300 (add armor negotion)
     if (_value < - 300) then {_isBleeding = true};
+
+    // create damage indicators
+    call {
+
+        // only run if the unit is player
+        if !(isPlayer _unit) exitWith {};
+
+        // only do if 100 hp or more was removed
+        if (_value > -100) exitWith {};
+        
+        private _isSourceKnown = true;
+
+        // determine where the damage came from
+        if (_damageFrom isEqualTo objNull) then {
+
+            // make 4 markers in 4 directions
+            _isSourceKnown = false;
+        };
+
+
+        // if damage from is an array AND it doesn't have 3 elements(position) or it is near [0,0,0], then exit
+        if (_damageFrom isEqualType [] && {(count _damageFrom) != 3 || {_damageFrom inArea [[0,0,0],100,100,0,false]}}) exitWith {};
+
+        // make an array for all the current hitmarkers
+        // a single PFH to check them every frame
+        // a function to make an unknown damage indicator (full circle)
+        
+        private _fnc_createCtrl = {
+            private _ctrl = findDisplay 46 ctrlCreate ["RscPictureKeepAspect", -1];
+            _ctrl ctrlSetPosition [safezoneX,safezoneY,safezoneW,safezoneH];
+
+            // todo set this as a global variable
+            imgPath = [(str missionConfigFile), 0, -15] call BIS_fnc_trimString;
+            imgPath = imgPath + "plugins\health\files\dialogs\hit_";
+
+            // set the default image
+            _ctrl ctrlSetText imgPath + '3.paa';
+            _ctrl ctrlCommit 0;
+            
+            // color and opacity for the image
+            _ctrl ctrlSetTextColor [0.5,1,1,0.4];
+            _ctrl
+        };
+        
+        // create a new control for this damage indication
+        private _ctrl = call _fnc_createCtrl;
+
+        private _angle = 0;
+        private _alpha = 1;
+        
+
+        // get angle based on where the damage came from, if it's known
+        if (_isSourceKnown) then {
+            _angle = (player getDir _damageFrom) - (getDir player);
+            if (_angle < 0) then {
+                _angle = 360 + _angle;
+            };
+        } else {
+            _angle = 0;
+        };
+        _ctrl setVariable ['ctrl_health_hitMarker_angle',_angle];
+        _ctrl setVariable ['ctrl_health_hitMarker_alpha',_alpha];
+        _ctrl setVariable ['ctrl_health_hitMarker_damageFrom',_damageFrom];
+
+        // convert the angle if it's higher than 180, so it's easier to know if it's behind or in front of the player
+        private _angle2 = _angle;
+        if (_angle > 180) then {_angle2 = _angle2 -360};
+
+        // image will be:
+        //      center of the screen: 5
+        //      nearby center(on screen): 4
+        //      behind/on edges: 3
+
+        
+        if (_isSourceKnown) then {
+            _ctrl ctrlSetText (imgPath+ call {
+                if (_angle2 < 20 && _angle2 > -20) exitWith {
+                    '5.paa';
+                };
+                if (_angle2 < 60 && _angle2 > -60) exitWith {
+                    '4.paa';
+                };
+                '3.paa';
+            });
+        };
+
+        // update the array of current hitmarkers
+        // also make the 4 angle markers here if there is no damagefrom
+        private _hitMarkerArray = missionNamespace getVariable ['mission_health_hitmarker_array',nil];
+
+        // if the array doesn't exist create it and link it
+        if (isNil '_hitMarkerArray') then {
+            _hitMarkerArray = [];
+            missionNamespace setVariable ['mission_health_hitmarker_array',_hitMarkerArray];
+        };
+
+        _hitMarkerArray pushBack _ctrl;
+
+        // todo replace with just changing the image 
+        if !(_isSourceKnown) then {
+            for '_i' from 1 to 3 do {
+                private _ctrl2 = call _fnc_createCtrl;
+                _ctrl2 setVariable ['ctrl_health_hitMarker_angle',_angle + 90 * _i];
+                _ctrl2 setVariable ['ctrl_health_hitMarker_alpha',_alpha];
+                _ctrl2 setVariable ['ctrl_health_hitMarker_damageFrom',_damageFrom];
+                _hitMarkerArray pushBack _ctrl2;
+            };
+        };
+
+        // check if the PFH exists, exit if it does
+        private _hitHandle = missionNamespace getVariable ['mission_health_hitMarker_handle',nil];
+        if (!isNil '_hitHandle') exitWith {};
+
+        
+        _hitHandle = [
+            {
+                _this params ['_args','_handle'];
+
+                // if the hitmarker array is empty, remove the PFH and delete the handle
+                private _hitMarkerArray = missionNamespace getVariable ['mission_health_hitmarker_array',[]];
+                private _hitMarkerArrayCopy = + _hitMarkerArray;
+                if (_hitMarkerArray isEqualTo []) exitWith {
+                    [_handle] call CBA_fnc_removePerFrameHandler;
+                    missionNamespace setVariable ['mission_health_hitMarker_handle',nil];
+                };
+
+                // loop thorugh all the hitmarkers
+                for '_i' from 0 to ((count _hitMarkerArray)-1) do {
+                    private _isDelete = (call {
+
+                        // use hitmarker array copy so the array positions don't change
+                        private _ctrl = _hitMarkerArrayCopy param [_i,controlNull];
+
+                        // if the control doesn't exist delete it from array
+                        if (isNull _ctrl) exitWith {true};
+
+                        // get variables from ctrl
+                        private _angle = _ctrl getVariable ['ctrl_health_hitMarker_angle',0];
+                        private _alpha = _ctrl getVariable ['ctrl_health_hitMarker_alpha',0];
+                        private _from = _ctrl getVariable ['ctrl_health_hitMarker_damageFrom',objNull];
+                        if (_angle > 359) then {_angle = 0};
+                        _ctrl ctrlSetAngle [_angle, 0.5, 0.5];
+                        _ctrl ctrlSetTextColor [0.5,1,1,_alpha];
+
+                        // update angle
+                        // if damage didn't come from objNull, get the angle to it
+                        if !(_from isEqualTo objNull) then {
+                            _angle = (player getdir _from) - (getdir player);
+                            if (_angle < 0) then {
+                                _angle = 360 + _angle;
+                            };
+                        };
+                        
+                        // update alpha
+                        _alpha = _alpha - ([0.0025,0.005] select (_alpha > 0.3));
+
+                        // if alpha is 0, delete the ctrl
+                        if (_alpha < 0) exitWith {
+                            ctrlDelete _ctrl;
+                            true
+                        };
+                        
+                        // save updates
+                        _ctrl setVariable ['ctrl_health_hitMarker_angle',_angle];
+                        _ctrl setVariable ['ctrl_health_hitMarker_alpha',_alpha];
+
+                        // return false (doesn't delete)
+                        false
+                    });
+
+                    // delete the current element from the main array
+                    if (_isDelete) then {
+                        ctrlDelete (_hitMarkerArray deleteAt _i);
+                    };
+                };
+            }, 0, []
+        ] call CBA_fnc_addPerFrameHandler;
+        missionNamespace setVariable ['mission_health_hitMarker_handle',_hitHandle];
+    };
+
+
+
+
+
+
+
+
+
 
 
 
