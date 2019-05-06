@@ -2,6 +2,9 @@
 // 100 / 62.5
 
 /*
+private _display = uiNamespace getVariable ["health_rsc_hud",displayNull];
+private _ctrl1 = (_display displayCtrl 6005);
+
 _x = safezoneX;
 _y = safezoneY;
 _w = safezoneW/40;
@@ -99,6 +102,29 @@ onEachFrame {
 */
 
 
+/*
+
+ 
+private _display = uiNamespace getVariable ["health_rsc_hud",displayNull]; 
+private _ctrl = (_display displayCtrl 6005); 
+ 
+_x = safezoneX; 
+_y = safezoneY; 
+_w = safezoneW/40; 
+_h = safezoneH/25; 
+ 
+_pos = [ 
+(_x + (1.52 * (_w/15*10))), 
+(_y + (22.80 *_h)), 
+(8.6 * (_w/15*10)), 
+(0.7 * _h) 
+]; 
+ 
+_ctrl ctrlSetPosition _pos; 
+_ctrl ctrlCommit 0.3;
+
+*/
+
 #define GUI_CTRL_W2 (GUI_CTRL_W/15*10)
 #define GUI_CTRL_H2 (GUI_CTRL_H/15*10)
 
@@ -195,15 +221,19 @@ class health_rsc_hud
 			x = GUI_GRID_X + (1.52 * GUI_CTRL_W2);
 			y = GUI_GRID_Y + (23.80 * GUI_CTRL_H);
 
-			w = 5.7 * GUI_CTRL_W2;
+			// from helmet
+			//w = 5.7 * GUI_CTRL_W2;
+			w = 8.6 * GUI_CTRL_W2;
 		};
 		class health_bar_5 : health_bar_4
 		{
 			idc = 6006;
 			x = GUI_GRID_X + (7.6 * GUI_CTRL_W2);
 			y = GUI_GRID_Y + (23.80 * GUI_CTRL_H);
-
-			w = 2.4 * GUI_CTRL_W2;
+			
+			// from helmet
+			//w = 2.4 * GUI_CTRL_W2;
+			w = 0 * GUI_CTRL_W2;
 		};
 		/*
 		class health_background_armor
@@ -305,7 +335,7 @@ class health_rsc_hud
 			colorText[] = {1.0,1.0,1.0,1.0};
 			font = "TahomaB";
 
-			text = "plugins\health\files\dialogs\a5.paa"; // icon
+			text = "plugins\health\files\dialogs\a6.paa"; // icon
 
 			lineSpacing = 0;
 			fixedWidth = 0;

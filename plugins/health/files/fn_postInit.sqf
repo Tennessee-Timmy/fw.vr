@@ -17,8 +17,8 @@ Author:
 #include "script_component.cpp"
 
 mission_health_fullHP = 10000;
-mission_health_fullAP = 6;
-mission_health_fullAPH = 3;
+mission_health_fullAP = 9;
+mission_health_fullAPH = 1;
 
 // reset hp on respawn
 if (isServer) then {
@@ -28,7 +28,7 @@ if (isServer) then {
         // todo replace with update hp function
         [_unit,mission_health_fullHP,false] call health_fnc_hpUpdate;
         [_unit,0,false,false] call health_fnc_apUpdate;
-        [_unit,0,false,true] call health_fnc_apUpdate;
+        //[_unit,0,false,true] call health_fnc_apUpdate;
     },"onRespawnUnit",true] call respawn_fnc_scriptAdd;
 };
 
@@ -86,8 +86,9 @@ health_fnc_onHitPart = {
 
             // head
             if (_selection isEqualTo 'head') exitWith {
-                if (_aph >= 1) then {
-                    _isAphHit = true;
+                // CHANGE FROM HELMET (_isAphHit)
+                if (_ap >= 1) then {
+                    _isApHit = true;
                     [_target,_position,_vector] remoteExec ['health_fnc_fxSparks'];
                 } else {
                     [_target,_position,_vector] remoteExec ['health_fnc_fxBlood'];
@@ -247,6 +248,7 @@ health_fnc_onHitPart = {
         // remove ap damage if it was a ap hit
         if (_isApHit) then {
             // damage will be halved (65% now)
+            // todo, based on ammo type, shread armor or absorb damage or dodge
             _currentDamage = _currentDamage*0.65;
 
             // ap will take 75% of the damage the hp takes
@@ -281,6 +283,8 @@ health_fnc_onHitPart = {
         _unit setVariable ['unit_health_lastDamageAt',CBA_Missiontime,true];
     };
 
+    // todo only 1 remote exec (health update packet)
+
     // remoteExec the hp update to the target
     [_unit,(-_totalDamage),true,_isBleeding,_killedBy] remoteExec ['health_fnc_hpUpdate',_unit];
 
@@ -289,12 +293,14 @@ health_fnc_onHitPart = {
         [_unit,_ap,false,false] remoteExec ['health_fnc_apUpdate',_unit];
     };
 
-    // update ap on target if it's changed
-    if (_aph != _aph_startedAt) then {
-        [_unit,_aph,false,true] remoteExec ['health_fnc_apUpdate',_unit];
-    };
 
+    // DEPRECATED
+    // update ap(helmet) on target if it's changed
+    //if (_aph != _aph_startedAt) then {
+    //    [_unit,_aph,false,true] remoteExec ['health_fnc_apUpdate',_unit];
+    //};
 
+    // check the current hp
     private _hp = [_unit] call health_fnc_hpGet;
     _hp = _hp - _totalDamage;
 
@@ -1487,8 +1493,8 @@ health_fnc_apUpdate = {
     private _varName = ['unit_health_ap','unit_health_aph'] select _isHelmet;
     private _ap = _unit getVariable [_varName,0];
 
-    // limit the value (6 for armor 3 for helmet)
-    _value = (_value max 0) min ([6,3] select _isHelmet);
+    // limit the value (9 for armor 0 for helmet)
+    _value = (_value max 0) min ([9,0] select _isHelmet);
     
 
     if (_isAdded) then {
@@ -1618,7 +1624,7 @@ private _display = uiNamespace getVariable "health_rsc_hud";
 // armor
 [player,mission_health_fullAP,false,false] call health_fnc_apUpdate;
 // helmet
-[player,mission_health_fullAP,false,true] call health_fnc_apUpdate;
+//[player,mission_health_fullAP,false,true] call health_fnc_apUpdate;
 
 // heal action
 //player addAction ["Heal Self", {[player,player,true] call health_fnc_hpHealAction}];
