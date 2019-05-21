@@ -20,21 +20,105 @@ Author:
 "inv_layer" cutRsc ["RscTitleDisplayEmpty", "PLAIN"];
 private _display = uiNamespace getVariable "RscTitleDisplayEmpty";
 
-private _ctrl_bg = _display ctrlCreate ['RscPicture',-1];
-_ctrl_bg ctrlSetText 'plugins\inv\files\dialogs\r1.paa';
+private _ctrlBG = _display ctrlCreate ['RscPicture',-1];
+_ctrlBG ctrlSetText 'plugins\inv\files\dialogs\r2.paa';
 
 private _x = safeZoneX;
 private _y = safeZoneY;
 private _w = safeZoneW/40;
 private _h = safeZoneH/25;
 
-_ctrl_bg ctrlSetPosition [
+private _pos_ctrlBG = [
     _x + (_w * 30),
-    _y + (_h * 20),
+    _y + (_h * 23.5),
     _w*10,
     _h*10
 ];
-_ctrl_bg ctrlCommit 0;
+
+_ctrlBG ctrlSetPosition _pos_ctrlBG;
+_ctrlBG ctrlCommit 0;
+
+private _ctrlGrpMags = _display ctrlCreate ['RscControlsGroup',-1];
+_ctrlGrpMags ctrlSetPosition [
+    _x + (_w * 35),
+    _y + (_h * 23.75),
+    _w*5,
+    _h*1.25
+];
+_ctrlGrpMags ctrlCommit 0;
+
+
+_fnc_createMag = {
+    params [['_count',0,[1]],['_isBG',false,[true]]];
+
+    // max 8 mags (0 to 7)
+    if (_count > 7) exitWith {};
+    
+    // special case for last mag (+ sign)
+    if (_count isEqualTo 7) exitWith {
+
+    };
+    private _ctrl = _display ctrlCreate ['RscText',-1,_ctrlGrpMags];
+    private _color = [0.7,0,0,1];
+    private _size = 0.25;
+    private _w_mag = _w*_size;
+    private _h_mag = _h*(_size*2);
+    private _w_spacer = _w * 0.1;
+    private _h_spacer = _h * 0.1;
+
+    private _w_bgExtra = 0;
+    private _h_bgExtra = 0;
+    if (_isBG) then {
+        _color = [0.592,0.588,0.569,1];
+        _w_bgExtra = _w * _size*0.1;
+        _h_bgExtra = _h * _size*0.1;
+    };
+    _ctrl ctrlSetBackgroundColor _color;
+
+    private _countRow = floor (_count / 4);
+    _count = _count mod 4;
+    private _pos = [
+        _w * (4.85) - _w_mag - _count * _w_mag - _count * _w_spacer - (_w_bgExtra),
+        _h * (1.15) - _h_mag - _countRow * _h_mag - _countRow * _h_spacer - (_h_bgExtra),
+        _w_mag + _w_bgExtra*2,
+        _h_mag + _h_bgExtra*2
+    ];
+    _ctrl ctrlSetPosition _pos;
+    _ctrl ctrlCommit 0;
+
+    _ctrl
+};
+
+private _ctrlMag1 = [0] call _fnc_createMag;
+private _ctrlMag2 = [1] call _fnc_createMag;
+
+// crate 1 mag
+private _ctrl_mag1 = _display ctrlCreate ['RscText',-1,_ctrlGrpMags];
+_ctrl_mag1 ctrlSetBackgroundColor [1,0,0,1];
+
+// mag width:
+private _pos_ctrl_mag1 = [
+    _w * 4.85 - _w_mag,
+    _h * 1.15 - _h_mag,
+    _w_mag,
+    _h_mag
+];
+_ctrl_mag1 ctrlSetPosition _pos_ctrl_mag1;
+_ctrl_mag1 ctrlCommit 0;
+
+
+private _ctrl_mag2 = _display ctrlCreate ['RscText',-1,_ctrlGrpMags];
+_ctrl_mag2 ctrlSetBackgroundColor [1,0,0,1];
+
+private _pos_ctrl_mag2 = [
+    _pos_ctrl_mag1#0,
+    _pos_ctrl_mag1#1 - _h_mag - _h * 0.1,
+    _w_mag,
+    _h_mag
+];
+
+_ctrl_mag2 ctrlSetPosition _pos_ctrl_mag2;
+_ctrl_mag2 ctrlCommit 0;
 
 // need HUD elements based on prior prototyping
 //  - kit indicator
@@ -111,7 +195,9 @@ _ctrl_bg ctrlCommit 0;
 
 
 
-
+// special classes
+//  - special classes will be available only 1 per squad/team/map
+//  - use points to buy them
 
 
 
