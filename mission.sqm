@@ -16,7 +16,7 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={7444.0205,58.355255,7359.8149};
+		pos[]={7454.9468,58.355255,7376.0142};
 		dir[]={0.48678356,-0.49250305,0.72154862};
 		up[]={0.27547002,0.87027764,0.40832144};
 		aside[]={0.82903987,-6.2468462e-007,-0.55930305};
@@ -49,6 +49,7 @@ addons[]=
 	"A3_Soft_F_Exp_Truck_01",
 	"ace_cargo",
 	"A3_Soft_F_Gamma_Truck_01",
+	"Blastcore_VEP",
 	"ace_rearm",
 	"ace_refuel",
 	"A3_Supplies_F_Exp_Ammoboxes",
@@ -56,6 +57,7 @@ addons[]=
 	"A3_Weapons_F_Ammoboxes",
 	"A3_Soft_F_Beta_MRAP_03",
 	"A3_Soft_F_Beta_Truck_02",
+	"gordon_reskins_pandur",
 	"A3_Armor_F_Gamma_APC_Wheeled_03",
 	"A3_Armor_F_EPB_APC_Tracked_03",
 	"A3_Armor_F_EPB_MBT_03",
@@ -76,7 +78,7 @@ class AddonsMetaData
 {
 	class List
 	{
-		items=30;
+		items=32;
 		class Item0
 		{
 			className="A3_Ui_F";
@@ -224,61 +226,71 @@ class AddonsMetaData
 		};
 		class Item21
 		{
+			className="Blastcore_VEP";
+			name="Blastcore_VEP";
+		};
+		class Item22
+		{
 			className="ace_rearm";
 			name="ACE3 - Rearm";
 			author="ACE-Team";
 			url="http://ace3mod.com/";
 		};
-		class Item22
+		class Item23
 		{
 			className="ace_refuel";
 			name="ACE3 - Refuel";
 			author="ACE-Team";
 			url="http://ace3mod.com/";
 		};
-		class Item23
+		class Item24
 		{
 			className="A3_Supplies_F_Exp";
 			name="Arma 3 Apex - Ammoboxes and Supplies";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item24
+		class Item25
 		{
 			className="ace_dragging";
 			name="ACE3 - Dragging";
 			author="ACE-Team";
 			url="http://ace3mod.com/";
 		};
-		class Item25
+		class Item26
 		{
 			className="A3_Weapons_F";
 			name="Arma 3 Alpha - Weapons and Accessories";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item26
+		class Item27
+		{
+			className="gordon_reskins_pandur";
+			name="gordon_reskins_pandur";
+		};
+		class Item28
 		{
 			className="A3_Armor_F_EPB";
 			name="Arma 3 Adapt Episode - Armored Land Vehicles";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item27
+		class Item29
 		{
 			className="A3_Air_F_EPB";
 			name="Arma 3 Adapt Episode - Aircraft";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item28
+		class Item30
 		{
 			className="A3_Air_F_Gamma";
 			name="Arma 3 - Aircraft";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item29
+		class Item31
 		{
 			className="ace_cookoff";
 			name="ACE3 - Cook off";
