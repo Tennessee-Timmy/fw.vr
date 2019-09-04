@@ -163,8 +163,6 @@ _ctrlMag1 setVariable ["ctrl_inv_mag_bg", _ctrlMag1BG];
 
 private _ctrlMag2 = [1] call _fnc_createMag;
 */
-
-
 /*
 // crate 1 mag
 private _ctrl_mag1 = _display ctrlCreate ['RscText',-1,_ctrlGrpMags];

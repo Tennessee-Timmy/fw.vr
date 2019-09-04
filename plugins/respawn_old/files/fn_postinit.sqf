@@ -82,8 +82,6 @@ if (hasInterface) then {
 		player call respawn_fnc_getSetUnitSide;
 
 		// Setup respawn and killed scripts
-
-		// todo add on unit spawn ( new respawn )
 		player addEventHandler ["Respawn", {_this call respawn_fnc_onRespawn;}];
 		player addEventHandler ["Killed", {_this call respawn_fnc_onKilled;}];
 

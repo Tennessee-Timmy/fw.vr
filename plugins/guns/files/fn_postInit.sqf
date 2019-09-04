@@ -63,6 +63,8 @@ if(diw_unknownwp_briefing) then {
   ]];
 };
 
+
+// todo add on unit spawn
 player addEventHandler["Fired",{
   _weapon = _this select 1;
   if(!(primaryWeapon ace_player == _weapon)) exitWith {};
@@ -95,6 +97,8 @@ player addEventHandler["Fired",{
   _cacheWeaponData setVariable [_weapon, _weaponData];
 }];
 
+
+// todo add on unit spawn
 player addEventHandler["Reloaded", {
   params ["_unit", "_weapon", "_muzzle", "_newMagazine", "_oldMagazine"];
 

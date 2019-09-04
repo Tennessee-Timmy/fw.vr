@@ -28,7 +28,7 @@ if (isPlayer _unit) exitWith {
 if (local _unit || !hasInterface) then {
 
 	// add killed event handler, which will remove empty groups and set as deleted groups (again, just in case the group has changed)
-	_unit addEventHandler ['killed',{_this call score_fnc_onKilled;}];
+	_unit addEventHandler ['killed',{_this call cleaner_fnc_onKilled;}];
 };
 
 if (isGroupDeletedWhenEmpty _group) exitWith {};
