@@ -112,7 +112,7 @@ waitUntil {
 
 		// .. and increase waypoint distatnce
 		_dist = _patrolDist + (_patrolDist / 10);
-		[_pad,'pDist',_dist] call ai_ins_fnc_setParam;
+		[_pad,'pDist',_dist] call ai_ins_fnc_setParam;		// TODO should replace this with the original value?
 		false
 	};
 };
